@@ -23,6 +23,9 @@ target 'Lace' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+  pod "react-native-haskell-shelley", :path => '../node_modules/@emurgo/react-native-haskell-shelley'
+  pod "react-native-randombytes", :path => '../node_modules/react-native-randombytes'
+
   target 'LaceTests' do
     inherit! :complete
     # Pods for testing
