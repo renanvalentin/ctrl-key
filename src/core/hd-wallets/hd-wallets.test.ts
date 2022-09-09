@@ -4,7 +4,7 @@ import * as seed from './seed';
 
 jest.mock('../cardano-serialization-lib', () => ({
   __esModule: true,
-  ...require('../__tests__/cardano-serialization-lib'),
+  ...require('../../__tests__/cardano-serialization-lib'),
 }));
 
 it('restore private key', async () => {

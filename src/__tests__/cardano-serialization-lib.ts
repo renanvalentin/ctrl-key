@@ -18,13 +18,10 @@ class Bip32PrivateKeyMock {
     this.privateKey = privateKey;
   }
 
-  static from_bip39_entropy(entropy: string, salt: string) {
+  static from_bip39_entropy(entropy: Uint8Array, salt: Uint8Array) {
     return Promise.resolve(
       new Bip32PrivateKeyMock(
-        Bip32PrivateKey.from_bip39_entropy(
-          Buffer.from(entropy, 'hex'),
-          Buffer.from(salt),
-        ),
+        Bip32PrivateKey.from_bip39_entropy(entropy, salt),
       ),
     );
   }

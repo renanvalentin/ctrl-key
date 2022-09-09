@@ -1,7 +1,9 @@
 import uuid from 'react-native-uuid';
-import { CSL } from './cardano-serialization-lib';
-import * as hdWallets from './hd-wallets';
-import * as crypto from './crypto';
+import { CSL } from '../cardano-serialization-lib';
+import * as hdWallets from '../hd-wallets';
+import { api } from '../blockfrost';
+import * as crypto from '../crypto';
+import { Account, AccountModel } from './account';
 
 export interface SerializedWallet {
   id: string;
@@ -11,21 +13,23 @@ export interface SerializedWallet {
   stakeVerificationKey: string;
 }
 
-export interface Wallet {
-  id: string;
-  name: string;
-  encryptedRootKey: string;
-  paymentVerificationKey: CSL.Bip32PublicKey;
-  stakeVerificationKey: CSL.Bip32PublicKey;
-  stakeAddress: string;
-  paymentAddresses: string[];
+export interface WalletModel {
+  readonly id: string;
+  readonly name: string;
+  readonly encryptedRootKey: string;
+  readonly paymentVerificationKey: CSL.Bip32PublicKey;
+  readonly stakeVerificationKey: CSL.Bip32PublicKey;
+  readonly stakeAddress: string;
+  readonly paymentAddresses: string[];
   serialize(): Promise<SerializedWallet>;
+  account(): Promise<AccountModel>;
 }
 
 export interface CreateWalletArgs {
   name: string;
   seedWords: string;
-  salt: string;
+  password: string;
+  salt?: string;
 }
 
 interface WalletDeps {
@@ -38,13 +42,13 @@ interface WalletDeps {
   stakeAddress: string;
 }
 
-export class Wallet implements Wallet {
-  id: string;
-  name: string;
-  encryptedRootKey: string;
-  paymentVerificationKey: CSL.Bip32PublicKey;
-  stakeVerificationKey: CSL.Bip32PublicKey;
-  paymentAddresses: string[];
+export class Wallet implements WalletModel {
+  readonly id: string;
+  readonly name: string;
+  readonly encryptedRootKey: string;
+  readonly paymentVerificationKey: CSL.Bip32PublicKey;
+  readonly stakeVerificationKey: CSL.Bip32PublicKey;
+  readonly paymentAddresses: string[];
 
   constructor({
     id,
@@ -63,8 +67,18 @@ export class Wallet implements Wallet {
     this.paymentAddresses = paymentAddresses;
     this.stakeAddress = stakeAddress;
   }
+  stakeAddress: string;
 
-  static async create({ name, seedWords, salt }: CreateWalletArgs) {
+  async account(): Promise<Account> {
+    const account = await api.accounts(this.stakeAddress);
+    return new Account({
+      stakeAddress: account.stake_address,
+      availableRewards: BigInt(account.withdrawable_amount),
+      totalAvailable: BigInt(account.controlled_amount),
+    });
+  }
+
+  static async create({ name, seedWords, salt, password }: CreateWalletArgs) {
     const entropy = hdWallets.mnemonic.mnemonicToEntropy(seedWords);
     const rootPrivateKey = await hdWallets.seed.createRootKey(entropy, salt);
 
@@ -79,7 +93,7 @@ export class Wallet implements Wallet {
       await hdWallets.addresses.createStakeVerificationKey(accountPrivateKey);
 
     const encryptedRootKey = await crypto.encryptWithPassword(
-      salt,
+      password,
       rootPrivateKey,
     );
 
@@ -123,8 +137,6 @@ export class Wallet implements Wallet {
     const paymentVerificationKey = await CSL.Bip32PublicKey.from_bech32(
       serializedWallet.paymentVerificationKey,
     );
-
-    console.log({ paymentVerificationKey });
 
     const stakeVerificationKey = await CSL.Bip32PublicKey.from_bech32(
       serializedWallet.stakeVerificationKey,
