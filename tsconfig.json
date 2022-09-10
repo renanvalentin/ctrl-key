@@ -5,7 +5,11 @@
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
     /* Completeness */
-    "skipLibCheck": true,                                 /* Skip type checking all .d.ts files. */
-    "isolatedModules": false
+    "skipLibCheck": true /* Skip type checking all .d.ts files. */,
+    "isolatedModules": false,
+    "paths": {
+      "@ctrlK/core": ["./src/core"]
+    },
+    "baseUrl": "."
   }
 }

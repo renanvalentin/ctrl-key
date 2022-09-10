@@ -63,24 +63,9 @@ it('retrieve wallet data', async () => {
 
   expect(txs).toEqual([
     {
-      hash: '87eb5358c1480739beed120e99e43ffc7e2c4a518bfb0a07c268a47e1db08b5b',
-      blockTime: 1662514094,
-      fees: 177513,
-    },
-    {
-      hash: '86b6173a53568e464bafce315ec6f61de0d5c180e144d9c2c57b86bb012fc0d2',
-      blockTime: 1662601462,
-      fees: 892330,
-    },
-    {
-      hash: '7b94e19a39d437ea8ae8a836309b1c39f9b549f0cd02eefd271ee83975ac5893',
-      blockTime: 1662601557,
-      fees: 179757,
-    },
-    {
-      hash: '03bb413faf369b8990b95eb5c0f1ca08c0f8199ea32b31ea7501f70f3c60ba89',
-      blockTime: 1662602880,
-      fees: 171441,
+      hash: '6d8ab0f38c5748e6fd59e04ec162c098784b27cbaaca6d2d1ab702e01f29a97c',
+      blockTime: 1662685090,
+      fees: 182221,
     },
     {
       hash: '378eac004bdec2421456d507b8549eedd69955182e29d469c3b2833f6473d5ce',
@@ -88,6 +73,26 @@ it('retrieve wallet data', async () => {
       fees: 179801,
     },
     {
+      hash: '03bb413faf369b8990b95eb5c0f1ca08c0f8199ea32b31ea7501f70f3c60ba89',
+      blockTime: 1662602880,
+      fees: 171441,
+    },
+    {
+      hash: '7b94e19a39d437ea8ae8a836309b1c39f9b549f0cd02eefd271ee83975ac5893',
+      blockTime: 1662601557,
+      fees: 179757,
+    },
+    {
+      hash: '86b6173a53568e464bafce315ec6f61de0d5c180e144d9c2c57b86bb012fc0d2',
+      blockTime: 1662601462,
+      fees: 892330,
+    },
+    {
+      hash: '87eb5358c1480739beed120e99e43ffc7e2c4a518bfb0a07c268a47e1db08b5b',
+      blockTime: 1662514094,
+      fees: 177513,
+    },
+    {
       hash: '6d8ab0f38c5748e6fd59e04ec162c098784b27cbaaca6d2d1ab702e01f29a97c',
       blockTime: 1662685090,
       fees: 182221,
@@ -96,11 +101,6 @@ it('retrieve wallet data', async () => {
       hash: '03bb413faf369b8990b95eb5c0f1ca08c0f8199ea32b31ea7501f70f3c60ba89',
       blockTime: 1662602880,
       fees: 171441,
-    },
-    {
-      hash: '6d8ab0f38c5748e6fd59e04ec162c098784b27cbaaca6d2d1ab702e01f29a97c',
-      blockTime: 1662685090,
-      fees: 182221,
     },
     {
       hash: '6d8ab0f38c5748e6fd59e04ec162c098784b27cbaaca6d2d1ab702e01f29a97c',

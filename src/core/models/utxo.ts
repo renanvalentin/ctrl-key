@@ -26,7 +26,7 @@ export interface UtxoModel {
   readonly inputs: TxIn[];
   readonly outputs: TxOut[];
   direction(addresses: AddressModel[]): TxDirections;
-  amount(addresses: AddressModel[]): {
+  txValue(addresses: AddressModel[]): {
     lovelace: bigint;
     assets?: EncodedAsset[];
   };
@@ -56,7 +56,7 @@ export class Utxo implements UtxoModel {
     throw new Error('Unhandled tx case');
   }
 
-  amount(fromAddresses: AddressModel[]): {
+  txValue(fromAddresses: AddressModel[]): {
     lovelace: bigint;
     assets?: EncodedAsset[] | undefined;
   } {

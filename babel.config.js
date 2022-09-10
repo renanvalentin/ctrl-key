@@ -15,5 +15,15 @@ module.exports = {
         },
       },
     ],
+    [
+      'module-resolver',
+      {
+        alias: {
+          // This needs to be mirrored in tsconfig.json
+          '@ctrlK/core': './src/core',
+          '@ctrlK/views': './src/views',
+        },
+      },
+    ],
   ],
 };

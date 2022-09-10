@@ -38,7 +38,7 @@ it('calculate received amount', async () => {
     'addr_test1qp0kjlqhv0qj4922hmez460nrjqegzgcqs5g3wha66f3p08t8erv04n4weca43v4jhdrpqsc5f5mh2zx0pa4k04v34eqy4ns2d',
   );
 
-  const txType = utxo.amount([address]);
+  const txType = utxo.txValue([address]);
 
   expect(txType).toEqual({ lovelace: 2_000_000n, assets: [] });
 });
@@ -50,7 +50,7 @@ it('calculate withdrawal amount', async () => {
     'addr_test1qp0kjlqhv0qj4922hmez460nrjqegzgcqs5g3wha66f3p08t8erv04n4weca43v4jhdrpqsc5f5mh2zx0pa4k04v34eqy4ns2d',
   );
 
-  const txType = utxo.amount([address]);
+  const txType = utxo.txValue([address]);
 
   expect(txType).toEqual({ lovelace: -2_000_000n, assets: [] });
 });
@@ -62,7 +62,7 @@ it('calculate assets', async () => {
     'addr_test1qp0kjlqhv0qj4922hmez460nrjqegzgcqs5g3wha66f3p08t8erv04n4weca43v4jhdrpqsc5f5mh2zx0pa4k04v34eqy4ns2d',
   );
 
-  const txType = utxo.amount([address]);
+  const txType = utxo.txValue([address]);
 
   expect(txType).toEqual({
     lovelace: 5_000_000n,
@@ -90,7 +90,7 @@ it('multiple addresses', async () => {
     'addr_test1qra2njhhucffhtfwq3zyvz3h9huqd87d83zay44h2a6nj0lt8erv04n4weca43v4jhdrpqsc5f5mh2zx0pa4k04v34eq32w05z',
   );
 
-  const txType = utxo.amount([address, address2, address3]);
+  const txType = utxo.txValue([address, address2, address3]);
 
   expect(txType).toEqual({
     lovelace: -2_182_221n,

@@ -31,10 +31,10 @@ export class Tx implements TxModel {
       const lovelace = amount.find(asset => asset.unit === 'lovelace');
 
       if (lovelace) {
-        return parseInt(lovelace.quantity, 10);
+        return BigInt(lovelace.quantity);
       }
 
-      return 0;
+      return 0n;
     };
 
     const findAssets = (amount: Amount[]) => {
@@ -42,7 +42,7 @@ export class Tx implements TxModel {
         .filter(asset => asset.unit !== 'lovelace')
         .map(asset => ({
           hex: asset.unit,
-          quantity: parseInt(asset.quantity, 10),
+          quantity: BigInt(asset.quantity),
         }));
     };
 

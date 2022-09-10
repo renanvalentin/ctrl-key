@@ -17,12 +17,15 @@
     "@react-navigation/native": "^6.0.12",
     "@react-navigation/native-stack": "^6.8.0",
     "axios": "^0.27.2",
+    "bignumber.js": "^9.1.0",
     "bip39": "^3.0.4",
     "buffer": "^6.0.3",
     "crypto-random-string": "^3.3.1",
     "date-fns": "^2.29.2",
+    "date-fns-tz": "^1.3.7",
     "events": "^3.3.0",
     "node-libs-browser": "^2.2.1",
+    "ramda": "^0.28.0",
     "react": "18.0.0",
     "react-native": "0.69.5",
     "react-native-crypto": "^2.2.0",
@@ -48,11 +51,13 @@
     "@tsconfig/react-native": "^2.0.2",
     "@types/jest": "^26.0.23",
     "@types/node": "^18.7.16",
+    "@types/ramda": "^0.28.15",
     "@types/react-native": "^0.69.5",
     "@types/react-test-renderer": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^5.29.0",
     "@typescript-eslint/parser": "^5.29.0",
     "babel-jest": "^28.1.3",
+    "babel-plugin-module-resolver": "^4.1.0",
     "babel-plugin-rewrite-require": "^1.14.5",
     "dotenv": "^16.0.2",
     "eslint": "^7.32.0",
@@ -85,6 +90,9 @@
     },
     "setupFiles": [
       "dotenv/config"
-    ]
+    ],
+    "moduleNameMapper": {
+      "@ctrlK/core": "<rootDir>/src/core"
+    }
   }
 }
