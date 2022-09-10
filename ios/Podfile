@@ -25,6 +25,8 @@ target 'Lace' do
 
   pod "react-native-haskell-shelley", :path => '../node_modules/@emurgo/react-native-haskell-shelley'
   pod "react-native-randombytes", :path => '../node_modules/react-native-randombytes'
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
+  pod 'react-native-config', :path => '../node_modules/react-native-config'
 
   target 'LaceTests' do
     inherit! :complete

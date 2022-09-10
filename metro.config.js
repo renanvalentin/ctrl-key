@@ -21,6 +21,7 @@ module.exports = {
       buffer: require.resolve('safe-buffer'),
       crypto: require.resolve('react-native-crypto'),
       stream: require.resolve('stream-browserify'),
+      fs: require.resolve('react-native-fs'),
       url: require.resolve('url'),
       util: require.resolve('util'),
       vm: require.resolve('vm-browserify'),

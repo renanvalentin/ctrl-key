@@ -1,5 +1,5 @@
 import { Wallet } from '@ctrlK/core';
-import { details } from './wallet';
+import { WalletViewModel } from './wallet';
 
 jest.mock('../../core/cardano-serialization-lib', () => ({
   __esModule: true,
@@ -19,12 +19,12 @@ it('retrieve wallet data', async () => {
     password,
   });
 
-  const summary = await details(wallet);
+  const summary = await WalletViewModel.summary(wallet);
 
   expect(summary).toEqual({
     name,
     balance: '11.538668 ADA',
-    marketPrice: '0',
+    marketPrice: expect.any(String),
     txs: [
       {
         type: 'withdrawal',

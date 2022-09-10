@@ -161,4 +161,8 @@ export class Wallet implements WalletModel {
       stakeAddress,
     });
   }
+
+  static validateMnemonic(mnemonic: string): boolean {
+    return hdWallets.mnemonic.validate(mnemonic);
+  }
 }

@@ -1,6 +1,12 @@
 import BigNumber from 'bignumber.js';
-import { sort, descend, prop, pipe, uniqWith, eqProps } from 'ramda';
-import { TxModel, WalletModel, AddressModel, TxDirections } from '@ctrlK/core';
+import { uniqWith, eqProps } from 'ramda';
+import {
+  WalletModel,
+  AddressModel,
+  TxDirections,
+  Wallet,
+  coingecko,
+} from '@ctrlK/core';
 import { format, fromUnixTime } from 'date-fns';
 
 interface Tx {
@@ -39,33 +45,42 @@ const getTxs = async (addresses: AddressModel[]) => {
   return uniqWith(eqProps('hash'), txs);
 };
 
-export const details = async (wallet: WalletModel): Promise<Summary> => {
-  const account = await wallet.account();
+export class WalletViewModel {
+  static async summary(wallet: WalletModel): Promise<Summary> {
+    const [account, price] = await Promise.all([
+      wallet.account(),
+      coingecko.price(),
+    ]);
 
-  const addresses = await account.addresses();
+    const addresses = await account.addresses();
 
-  const txs = await getTxs(addresses);
+    const txs = await getTxs(addresses);
 
-  const txViewRequests = txs.map(async tx => {
-    const utxo = await tx.utxo();
-    const direciton = utxo.direction(addresses);
-    const amount = utxo.txValue(addresses);
+    const txViewRequests = txs.map(async tx => {
+      const utxo = await tx.utxo();
+      const direciton = utxo.direction(addresses);
+      const amount = utxo.txValue(addresses);
+
+      return {
+        type: direciton === TxDirections.Incoming ? 'received' : 'withdrawal',
+        amount: toADA(amount.lovelace),
+        fees: direciton === TxDirections.Incoming ? undefined : toADA(tx.fees),
+        date: format(fromUnixTime(tx.blockTime), 'yyyy/MM/dd hh:mm:ss a'),
+        id: tx.hash,
+      } as Tx;
+    });
+
+    const txsViews = await Promise.all(txViewRequests);
 
     return {
-      type: direciton === TxDirections.Incoming ? 'received' : 'withdrawal',
-      amount: toADA(amount.lovelace),
-      fees: direciton === TxDirections.Incoming ? undefined : toADA(tx.fees),
-      date: format(fromUnixTime(tx.blockTime), 'yyyy/MM/dd hh:mm:ss a'),
-      id: tx.hash,
-    } as Tx;
-  });
+      name: wallet.name,
+      balance: toADA(account.balance),
+      marketPrice: price.cardano.usd + ' USD',
+      txs: txsViews,
+    };
+  }
 
-  const txsViews = await Promise.all(txViewRequests);
-
-  return {
-    name: wallet.name,
-    balance: toADA(account.balance),
-    marketPrice: '0',
-    txs: txsViews,
-  };
-};
+  static validateMnemonic(mnemonic: string): boolean {
+    return Wallet.validateMnemonic(mnemonic);
+  }
+}

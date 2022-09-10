@@ -22,6 +22,7 @@ module.exports = {
           // This needs to be mirrored in tsconfig.json
           '@ctrlK/core': './src/core',
           '@ctrlK/views': './src/views',
+          '@ctrlK/config': './src/config',
         },
       },
     ],

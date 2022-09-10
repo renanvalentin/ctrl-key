@@ -8,7 +8,8 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */,
     "isolatedModules": false,
     "paths": {
-      "@ctrlK/core": ["./src/core"]
+      "@ctrlK/core": ["./src/core"],
+      "@ctrlK/config": ["./src/config"]
     },
     "baseUrl": "."
   }
