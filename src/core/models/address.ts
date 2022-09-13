@@ -1,9 +1,11 @@
-import { api } from '../blockfrost';
+import { amountToValue, api } from '../blockfrost';
+import { AddressUtxo } from './address-utxo';
 import { Tx, TxModel } from './tx';
 
 export interface AddressModel {
   readonly address: string;
   transactions(): Promise<Tx[]>;
+  utxos(): Promise<AddressUtxo[]>;
 }
 
 export class Address implements AddressModel {
@@ -11,6 +13,18 @@ export class Address implements AddressModel {
 
   constructor(address: string) {
     this.address = address;
+  }
+
+  async utxos(): Promise<AddressUtxo[]> {
+    const utxos = await api.addressesUtxosAll(this.address);
+    return utxos.map(
+      utxo =>
+        new AddressUtxo({
+          txHash: utxo.tx_hash,
+          outputIndex: utxo.output_index,
+          value: amountToValue(utxo.amount),
+        }),
+    );
   }
 
   async transactions(): Promise<TxModel[]> {

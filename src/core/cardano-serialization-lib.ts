@@ -6,7 +6,9 @@ import {
   StakeCredential,
   BaseAddress,
   RewardAddress,
+  TransactionOutput,
 } from '@emurgo/react-native-haskell-shelley';
+TransactionOutput.new()
 
 export declare namespace CSL {
   export type Bip32PrivateKey = Bip32PrivateKey_;
@@ -21,4 +23,5 @@ export const CSL = {
   BaseAddress,
   RewardAddress,
   Bip32PublicKey: Bip32PublicKey_,
+  TransactionOutput,
 };

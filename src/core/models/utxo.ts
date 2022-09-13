@@ -1,20 +1,14 @@
+import { EncodedAsset, TxValue } from '../cardano';
 import { AddressModel } from './address';
-
-interface EncodedAsset {
-  hex: string;
-  quantity: bigint;
-}
 
 export interface TxIn {
   address: string;
-  lovelace: bigint;
-  assets: EncodedAsset[];
+  value: TxValue;
 }
 
 export interface TxOut {
   address: string;
-  lovelace: bigint;
-  assets: EncodedAsset[];
+  value: TxValue;
 }
 
 export enum TxDirections {
@@ -26,10 +20,7 @@ export interface UtxoModel {
   readonly inputs: TxIn[];
   readonly outputs: TxOut[];
   direction(addresses: AddressModel[]): TxDirections;
-  txValue(addresses: AddressModel[]): {
-    lovelace: bigint;
-    assets?: EncodedAsset[];
-  };
+  txValue(addresses: AddressModel[]): TxValue;
 }
 
 export class Utxo implements UtxoModel {
@@ -56,10 +47,7 @@ export class Utxo implements UtxoModel {
     throw new Error('Unhandled tx case');
   }
 
-  txValue(fromAddresses: AddressModel[]): {
-    lovelace: bigint;
-    assets?: EncodedAsset[] | undefined;
-  } {
+  txValue(fromAddresses: AddressModel[]): TxValue {
     const direction = this.direction(fromAddresses);
     const fromAddressesSet = new Set(fromAddresses.map(addr => addr.address));
 
@@ -71,30 +59,29 @@ export class Utxo implements UtxoModel {
           throw new Error("Couldn't locate any output for addresses");
         }
 
-        return {
-          lovelace: output.lovelace,
-          assets: output.assets,
-        };
+        return output.value;
       }
 
       case TxDirections.Outgoing: {
         const inputs = this.inputs
           .filter(o => fromAddressesSet.has(o.address))
-          .reduce((acc, i) => i.lovelace + acc, 0n);
+          .reduce((acc, i) => i.value.lovelace + acc, 0n);
 
         const outputs = this.outputs
           .filter(o => fromAddressesSet.has(o.address))
-          .reduce((acc, i) => i.lovelace + acc, 0n);
+          .reduce((acc, i) => i.value.lovelace + acc, 0n);
 
-        const assetsInput = this.inputs.flatMap(i => i.assets);
+        const assetsInput = this.inputs.flatMap(i => i.value.assets);
 
         const assetsOutput = new Map(
           this.outputs
             .filter(o => fromAddressesSet.has(o.address))
-            .flatMap(i => i.assets.map(({ hex, quantity }) => [hex, quantity])),
+            .flatMap(i =>
+              i.value.assets.map(({ hex, quantity }) => [hex, quantity]),
+            ),
         );
 
-        const assets = assetsInput.map(({ hex, quantity }) => {
+        const assets = assetsInput.map(({ hex, quantity }): EncodedAsset => {
           const outputQuantity = assetsOutput.get(hex);
           if (!outputQuantity) {
             return {
