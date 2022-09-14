@@ -1,0 +1,1 @@
+export const BLOCKFROST_API_TOKEN = process.env.BLOCKFROST_API_TOKEN;
