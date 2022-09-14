@@ -1,0 +1,22 @@
+type Query {
+  wallet(stakeAddress: String!): Wallet!
+  hello: String!
+}
+
+type Wallet {
+  balance: String!
+  txs: [Tx!]!
+}
+
+type Tx {
+  type: TxDirection!
+  amount: String!
+  fees: String
+  date: Int!
+  id: String!
+}
+
+enum TxDirection {
+  Outgoing
+  Incoming
+}
