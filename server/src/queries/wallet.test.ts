@@ -8,6 +8,7 @@ const query = `
 {  
   wallet(stakeAddress:"stake_test1ur4nu3k86e6hvuw6ck2etk3ssgv2y6dm4pr8s76m86kg6usappr74") {
     balance,
+    marketPrice,
     txs {
       type,
       amount,
@@ -29,6 +30,7 @@ describe('query wallet', function () {
     expect(response.body.data).toEqual({
       wallet: {
         balance: '11538668',
+        marketPrice: expect.any(String),
         txs: [
           {
             type: 'Outgoing',

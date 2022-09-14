@@ -1,5 +1,5 @@
 import { uniqWith, eqProps } from 'ramda';
-import { AddressModel, TxDirections, Wallet } from '@ctrl-k/core';
+import { AddressModel, TxDirections, Wallet, coingecko } from '@ctrl-k/core';
 import * as gql from '../resolvers-types';
 
 const getTxs = async (addresses: AddressModel[]) => {
@@ -13,7 +13,10 @@ const getTxs = async (addresses: AddressModel[]) => {
 export class WalletQuery {
   static async byStakeAddress(stakeAddress: string): Promise<gql.Wallet> {
     const wallet = new Wallet({ stakeAddress });
-    const account = await wallet.account();
+    const [account, price] = await Promise.all([
+      wallet.account(),
+      coingecko.price(),
+    ]);
 
     const addresses = await account.addresses();
 
@@ -40,6 +43,7 @@ export class WalletQuery {
     const txsViews = await Promise.all(txViewRequests);
 
     return {
+      marketPrice: price.cardano.usd,
       balance: account.balance.toString(),
       txs: txsViews,
     };

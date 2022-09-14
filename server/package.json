@@ -7,7 +7,7 @@
     "start": "ts-node -r tsconfig-paths/register src/index.ts",
     "dev": "cross-env NODE_ENV=development ts-node-dev -r tsconfig-paths/register --exit-child --respawn src/index.ts",
     "test": "TZ='America/New_York' jest",
-    "generate": "graphql-codegen"
+    "codegen": "graphql-codegen"
   },
   "keywords": [],
   "author": "",
@@ -66,6 +66,7 @@
     "@emurgo/cardano-serialization-lib-nodejs": "^11.0.5",
     "@graphql-tools/schema": "^9.0.4",
     "@graphql-yoga/node": "^2.13.13",
+    "axios": "^0.27.2",
     "graphql": "^16.6.0",
     "graphql-scalars": "^1.18.0",
     "json-bigint-patch": "^0.0.8",

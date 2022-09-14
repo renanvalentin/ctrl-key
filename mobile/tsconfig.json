@@ -9,7 +9,8 @@
     "isolatedModules": false,
     "paths": {
       "@ctrlK/core": ["./src/core"],
-      "@ctrlK/config": ["./src/config"]
+      "@ctrlK/config": ["./src/config"],
+      "@ctrl-k/schema": ["./src/schema"]
     },
     "baseUrl": "."
   }
