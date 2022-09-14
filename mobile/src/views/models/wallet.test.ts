@@ -1,5 +1,5 @@
-import { Wallet } from '@ctrlK/core';
 import { WalletViewModel } from './wallet';
+import * as fixtures from './wallet.fixture';
 
 jest.mock('../../core/cardano-serialization-lib', () => ({
   __esModule: true,
@@ -7,19 +7,8 @@ jest.mock('../../core/cardano-serialization-lib', () => ({
 }));
 
 it('retrieve wallet data', async () => {
-  const password = 'pass';
-
-  const seedWords = process.env.MNEMONIC;
-
   const name = 'w';
-
-  const wallet = await Wallet.create({
-    name,
-    seedWords,
-    password,
-  });
-
-  const summary = await WalletViewModel.summary(wallet);
+  const summary = WalletViewModel.summary(name, fixtures.wallet);
 
   expect(summary).toEqual({
     name,

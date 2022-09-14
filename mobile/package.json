@@ -1,5 +1,5 @@
 {
-  "name": "Lace",
+  "name": "@ctrl-k/mobile",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -8,9 +8,12 @@
     "start": "react-native start",
     "test": "TZ='America/New_York' jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "build:csl": "sh ./node_modules/@emurgo/react-native-haskell-shelley/ios/buid.sh"
+    "build:csl": "sh ./node_modules/@emurgo/react-native-haskell-shelley/ios/buid.sh",
+    "codegen": "graphql-codegen"
   },
   "dependencies": {
+    "@apollo/client": "^3.6.9",
+    "@emurgo/cardano-serialization-lib-asmjs": "^11.0.5",
     "@emurgo/react-native-haskell-shelley": "^3.1.4",
     "@react-native-async-storage/async-storage": "^1.17.10",
     "@react-navigation/native": "^6.0.12",
@@ -23,6 +26,7 @@
     "date-fns": "^2.29.2",
     "date-fns-tz": "^1.3.7",
     "events": "^3.3.0",
+    "graphql": "^16.6.0",
     "node-libs-browser": "^2.2.1",
     "ramda": "^0.28.0",
     "react": "18.0.0",
@@ -47,6 +51,8 @@
     "@babel/core": "^7.12.9",
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
     "@babel/runtime": "^7.12.5",
+    "@graphql-codegen/cli": "^2.12.0",
+    "@graphql-codegen/typescript": "^2.7.3",
     "@blockfrost/blockfrost-js": "^5.0.0",
     "@emurgo/cardano-serialization-lib-nodejs": "^11.0.5",
     "@react-native-community/eslint-config": "^2.0.0",
@@ -94,7 +100,8 @@
       "dotenv/config"
     ],
     "moduleNameMapper": {
-      "@ctrlK/core": "<rootDir>/src/core"
+      "@ctrlK/core": "<rootDir>/src/core",
+      "@ctrl-k/schema": "<rootDir>/src/schema"
     }
   }
 }

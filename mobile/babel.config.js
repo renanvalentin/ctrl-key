@@ -19,10 +19,11 @@ module.exports = {
       'module-resolver',
       {
         alias: {
-          // This needs to be mirrored in tsconfig.json
+          // This needs to be mirrored in tsconfig.json | package.json
           '@ctrlK/core': './src/core',
           '@ctrlK/views': './src/views',
           '@ctrlK/config': './src/config',
+          '@ctrl-k/schema': './src/schema',
         },
       },
     ],

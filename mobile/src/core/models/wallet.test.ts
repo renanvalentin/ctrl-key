@@ -38,6 +38,8 @@ it('retrieve wallet data', async () => {
     password,
   });
 
+  console.log(wallet.stakeAddress);
+
   const account = await wallet.account();
 
   const addresses = await account.addresses();

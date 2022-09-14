@@ -42,6 +42,7 @@ export enum TxDirection {
 export type Wallet = {
   __typename?: 'Wallet';
   balance: Scalars['String'];
+  marketPrice: Scalars['Float'];
   txs: Array<Tx>;
 };
 
@@ -115,6 +116,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Float: ResolverTypeWrapper<Scalars['Float']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
@@ -126,6 +128,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
+  Float: Scalars['Float'];
   Int: Scalars['Int'];
   Query: {};
   String: Scalars['String'];
@@ -149,6 +152,7 @@ export type TxResolvers<ContextType = any, ParentType extends ResolversParentTyp
 
 export type WalletResolvers<ContextType = any, ParentType extends ResolversParentTypes['Wallet'] = ResolversParentTypes['Wallet']> = {
   balance?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  marketPrice?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   txs?: Resolver<Array<ResolversTypes['Tx']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

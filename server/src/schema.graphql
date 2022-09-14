@@ -5,6 +5,7 @@ type Query {
 
 type Wallet {
   balance: String!
+  marketPrice: Float!
   txs: [Tx!]!
 }
 
