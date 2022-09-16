@@ -1,14 +1,14 @@
-import { EncodedAsset, TxValue } from '../cardano';
+import { EncodedAsset, TxValueModel, TxValue } from './tx-value';
 import { AddressModel } from './address';
 
 export interface TxIn {
   address: string;
-  value: TxValue;
+  value: TxValueModel;
 }
 
 export interface TxOut {
   address: string;
-  value: TxValue;
+  value: TxValueModel;
 }
 
 export enum TxDirections {
@@ -20,7 +20,7 @@ export interface UtxoModel {
   readonly inputs: TxIn[];
   readonly outputs: TxOut[];
   direction(addresses: AddressModel[]): TxDirections;
-  txValue(addresses: AddressModel[]): TxValue;
+  txValue(addresses: AddressModel[]): TxValueModel;
 }
 
 export class Utxo implements UtxoModel {
@@ -47,7 +47,7 @@ export class Utxo implements UtxoModel {
     throw new Error('Unhandled tx case');
   }
 
-  txValue(fromAddresses: AddressModel[]): TxValue {
+  txValue(fromAddresses: AddressModel[]): TxValueModel {
     const direction = this.direction(fromAddresses);
     const fromAddressesSet = new Set(fromAddresses.map(addr => addr.address));
 
@@ -98,10 +98,10 @@ export class Utxo implements UtxoModel {
 
         const lovelace = inputs - outputs;
 
-        return {
+        return new TxValue({
           lovelace: lovelace * -1n,
           assets: assets,
-        };
+        });
       }
 
       default:

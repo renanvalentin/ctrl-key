@@ -1,6 +1,6 @@
 import { BlockFrostAPI } from '@blockfrost/blockfrost-js';
 import { BLOCKFROST_API_TOKEN } from '@ctrl-k/config';
-import { TxValue } from './cardano';
+import { TxValueModel, TxValue } from './models/tx-value';
 
 export const api = new BlockFrostAPI({
   projectId: BLOCKFROST_API_TOKEN as string,
@@ -12,7 +12,7 @@ interface Amount {
   quantity: string;
 }
 
-export const amountToValue = (amount: Amount[]): TxValue => {
+export const amountToValue = (amount: Amount[]): TxValueModel => {
   const findLovelace = () => {
     const lovelace = amount.find(asset => asset.unit === 'lovelace');
 
@@ -32,8 +32,8 @@ export const amountToValue = (amount: Amount[]): TxValue => {
       }));
   };
 
-  return {
+  return new TxValue({
     lovelace: findLovelace(),
     assets: findAssets(),
-  };
+  });
 };

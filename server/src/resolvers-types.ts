@@ -14,10 +14,23 @@ export type Scalars = {
   Float: number;
 };
 
+export type EncodedAsset = {
+  hex: Scalars['String'];
+  quantity: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
+  buildTx: TxBody;
   hello: Scalars['String'];
   wallet: Wallet;
+};
+
+
+export type QueryBuildTxArgs = {
+  paymentAddress: Scalars['String'];
+  stakeAddress: Scalars['String'];
+  value: TxValue;
 };
 
 
@@ -34,10 +47,20 @@ export type Tx = {
   type: TxDirection;
 };
 
+export type TxBody = {
+  __typename?: 'TxBody';
+  hex: Scalars['String'];
+};
+
 export enum TxDirection {
   Incoming = 'Incoming',
   Outgoing = 'Outgoing'
 }
+
+export type TxValue = {
+  assets: Array<EncodedAsset>;
+  lovelace: Scalars['String'];
+};
 
 export type Wallet = {
   __typename?: 'Wallet';
@@ -116,27 +139,34 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  EncodedAsset: EncodedAsset;
   Float: ResolverTypeWrapper<Scalars['Float']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
   Tx: ResolverTypeWrapper<Tx>;
+  TxBody: ResolverTypeWrapper<TxBody>;
   TxDirection: TxDirection;
+  TxValue: TxValue;
   Wallet: ResolverTypeWrapper<Wallet>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
+  EncodedAsset: EncodedAsset;
   Float: Scalars['Float'];
   Int: Scalars['Int'];
   Query: {};
   String: Scalars['String'];
   Tx: Tx;
+  TxBody: TxBody;
+  TxValue: TxValue;
   Wallet: Wallet;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  buildTx?: Resolver<ResolversTypes['TxBody'], ParentType, ContextType, RequireFields<QueryBuildTxArgs, 'paymentAddress' | 'stakeAddress' | 'value'>>;
   hello?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   wallet?: Resolver<ResolversTypes['Wallet'], ParentType, ContextType, RequireFields<QueryWalletArgs, 'stakeAddress'>>;
 };
@@ -150,6 +180,11 @@ export type TxResolvers<ContextType = any, ParentType extends ResolversParentTyp
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type TxBodyResolvers<ContextType = any, ParentType extends ResolversParentTypes['TxBody'] = ResolversParentTypes['TxBody']> = {
+  hex?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type WalletResolvers<ContextType = any, ParentType extends ResolversParentTypes['Wallet'] = ResolversParentTypes['Wallet']> = {
   balance?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   marketPrice?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
@@ -160,6 +195,7 @@ export type WalletResolvers<ContextType = any, ParentType extends ResolversParen
 export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>;
   Tx?: TxResolvers<ContextType>;
+  TxBody?: TxBodyResolvers<ContextType>;
   Wallet?: WalletResolvers<ContextType>;
 };
 

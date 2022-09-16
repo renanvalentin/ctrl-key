@@ -23,6 +23,7 @@ export class Address implements AddressModel {
           txHash: utxo.tx_hash,
           outputIndex: utxo.output_index,
           value: amountToValue(utxo.amount),
+          address: this.address,
         }),
     );
   }

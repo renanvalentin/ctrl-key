@@ -1,4 +1,5 @@
 import { TxIn, TxOut } from './utxo';
+import { TxValue } from './tx-value';
 
 interface Utxo {
   readonly inputs: TxIn[];
@@ -10,7 +11,7 @@ export const received: Utxo = {
     {
       address:
         'addr_test1qzfxzvpjanrvrsk0g50822c2ygka3fcrwrdhn005wgwvwzpx5nug0rl07jrccgshdhzr4ya63t6nexm4zfx6mn6pnnaqgnscnz',
-      value: {
+      value: new TxValue({
         lovelace: 983815157n,
         assets: [
           {
@@ -30,22 +31,22 @@ export const received: Utxo = {
             quantity: 5n,
           },
         ],
-      },
+      }),
     },
   ],
   outputs: [
     {
       address:
         'addr_test1qp0kjlqhv0qj4922hmez460nrjqegzgcqs5g3wha66f3p08t8erv04n4weca43v4jhdrpqsc5f5mh2zx0pa4k04v34eqy4ns2d',
-      value: {
+      value: new TxValue({
         lovelace: 2000000n,
         assets: [],
-      },
+      }),
     },
     {
       address:
         'addr_test1qq04yhgnypckrtcmk2zlkv9nmk7ghr2ck752h2vqxhqdx6fx5nug0rl07jrccgshdhzr4ya63t6nexm4zfx6mn6pnnaqpxnem7',
-      value: {
+      value: new TxValue({
         lovelace: 981637644n,
         assets: [
           {
@@ -65,7 +66,7 @@ export const received: Utxo = {
             quantity: 5n,
           },
         ],
-      },
+      }),
     },
   ],
 };
@@ -75,20 +76,20 @@ export const withdrawal: Utxo = {
     {
       address:
         'addr_test1qp0kjlqhv0qj4922hmez460nrjqegzgcqs5g3wha66f3p08t8erv04n4weca43v4jhdrpqsc5f5mh2zx0pa4k04v34eqy4ns2d',
-      value: {
+      value: new TxValue({
         lovelace: 2000000n,
         assets: [],
-      },
+      }),
     },
   ],
   outputs: [
     {
       address:
         'addr_test1qq04yhgnypckrtcmk2zlkv9nmk7ghr2ck752h2vqxhqdx6fx5nug0rl07jrccgshdhzr4ya63t6nexm4zfx6mn6pnnaqpxnem7',
-      value: {
+      value: new TxValue({
         lovelace: 1107670n,
         assets: [],
-      },
+      }),
     },
   ],
 };
@@ -98,7 +99,7 @@ export const withAssets: Utxo = {
     {
       address:
         'addr_test1qq04yhgnypckrtcmk2zlkv9nmk7ghr2ck752h2vqxhqdx6fx5nug0rl07jrccgshdhzr4ya63t6nexm4zfx6mn6pnnaqpxnem7',
-      value: {
+      value: new TxValue({
         lovelace: 981637644n,
         assets: [
           {
@@ -118,14 +119,14 @@ export const withAssets: Utxo = {
             quantity: 5n,
           },
         ],
-      },
+      }),
     },
   ],
   outputs: [
     {
       address:
         'addr_test1qp0kjlqhv0qj4922hmez460nrjqegzgcqs5g3wha66f3p08t8erv04n4weca43v4jhdrpqsc5f5mh2zx0pa4k04v34eqy4ns2d',
-      value: {
+      value: new TxValue({
         lovelace: 5000000n,
         assets: [
           {
@@ -133,12 +134,12 @@ export const withAssets: Utxo = {
             quantity: 1n,
           },
         ],
-      },
+      }),
     },
     {
       address:
         'addr_test1qp68c3xln96mq4ed72aa4dgddhtltzxyrwq6quhh7g0vag3x5nug0rl07jrccgshdhzr4ya63t6nexm4zfx6mn6pnnaqar72tw',
-      value: {
+      value: new TxValue({
         lovelace: 976457887n,
         assets: [
           {
@@ -158,7 +159,7 @@ export const withAssets: Utxo = {
             quantity: 4n,
           },
         ],
-      },
+      }),
     },
   ],
 };
