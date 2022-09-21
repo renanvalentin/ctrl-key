@@ -56,7 +56,7 @@ class Bip32PrivateKeyMock {
   }
 
   to_raw_key() {
-    return Promise.resolve(this.privateKey.to_raw_key());
+    return Promise.resolve(new PrivateKeyMock(this.privateKey.to_raw_key()));
   }
 
   to_bech32() {
@@ -103,6 +103,18 @@ class PublicKeyMock {
 
   hash() {
     return Promise.resolve(this.publicKey.hash());
+  }
+}
+
+class PrivateKeyMock {
+  privateKey: PrivateKey;
+
+  constructor(privateKey: PrivateKey) {
+    this.privateKey = privateKey;
+  }
+
+  to_bech32() {
+    return Promise.resolve(this.privateKey.to_bech32());
   }
 }
 
@@ -241,8 +253,8 @@ export const CSL = {
   Vkeywitnesses: {
     new: VkeywitnessesMock.new,
   },
-  make_vkey_witness: (txBodyHash: TransactionHash, sk: PrivateKey) =>
-    Promise.resolve(make_vkey_witness(txBodyHash, sk)),
+  make_vkey_witness: (txBodyHash: TransactionHash, sk: PrivateKeyMock) =>
+    Promise.resolve(make_vkey_witness(txBodyHash, sk.privateKey)),
   TransactionWitnessSet: {
     new: TransactionWitnessSetMock.new,
   },

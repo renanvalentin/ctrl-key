@@ -26,9 +26,9 @@ it('serialize wallet', async () => {
   expect(wallet.paymentAddresses).toEqual(deserializedWallet.paymentAddresses);
 });
 
-
 it('sign tx', async () => {
-  const salt = 'pass';
+  const salt = '';
+  const password = 'pass';
 
   const seedWords = process.env.MNEMONIC;
 
@@ -37,14 +37,18 @@ it('sign tx', async () => {
   const wallet = await Wallet.create({
     name,
     seedWords,
-    password: salt,
+    password,
     salt,
   });
 
   const txHex =
-    'a400818258202ac7d239675972200bc664576fee67e23eacb70ff5943f985b9f64d1ae82e19600018282583900faa9caf7e6129bad2e0444460a372df8069fcd3c45d256b75775393feb3e46c7d6757671dac59595da308218a269bba846787b5b3eac8d721a002dc6c0825839005f697c1763c12a954abef22ae9f31c81940918042888bafdd69310bceb3e46c7d6757671dac59595da308218a269bba846787b5b3eac8d721a05c588c3021a0002917d031a000641a5';
+    'a40081825820e7e9e5d74f2c5a00828cd1f638ec0991ea198d30a55c6fccb81f8ea32b425f040101828258390092613032ecc6c1c2cf451e752b0a222dd8a70370db79bdf4721cc70826a4f8878feff4878c22176dc43a93ba8af53c9b75124dadcf419cfa1a001e8480825839005f697c1763c12a954abef22ae9f31c81940918042888bafdd69310bceb3e46c7d6757671dac59595da308218a269bba846787b5b3eac8d72821a05629e81a1581c789ef8ae89617f34c07f7f6a12e4d65146f958c0bc15a97b4ff169f1a1496861707079636f696e02021a0002990d031a04229435';
 
-  const tx = await wallet.signTx(txHex, salt);
+  const witnessesAddress = [
+    'addr_test1qp0kjlqhv0qj4922hmez460nrjqegzgcqs5g3wha66f3p08t8erv04n4weca43v4jhdrpqsc5f5mh2zx0pa4k04v34eqy4ns2d',
+  ];
+
+  const tx = await wallet.signTx(txHex, password, witnessesAddress);
 
   const txBytes = await tx.to_bytes();
 
@@ -53,16 +57,16 @@ it('sign tx', async () => {
       inputs: [
         {
           transaction_id:
-            '2ac7d239675972200bc664576fee67e23eacb70ff5943f985b9f64d1ae82e196',
-          index: 0,
+            'e7e9e5d74f2c5a00828cd1f638ec0991ea198d30a55c6fccb81f8ea32b425f04',
+          index: 1,
         },
       ],
       outputs: [
         {
           address:
-            'addr_test1qra2njhhucffhtfwq3zyvz3h9huqd87d83zay44h2a6nj0lt8erv04n4weca43v4jhdrpqsc5f5mh2zx0pa4k04v34eq32w05z',
+            'addr_test1qzfxzvpjanrvrsk0g50822c2ygka3fcrwrdhn005wgwvwzpx5nug0rl07jrccgshdhzr4ya63t6nexm4zfx6mn6pnnaqgnscnz',
           amount: {
-            coin: '3000000',
+            coin: '2000000',
             multiasset: null,
           },
           plutus_data: null,
@@ -72,15 +76,19 @@ it('sign tx', async () => {
           address:
             'addr_test1qp0kjlqhv0qj4922hmez460nrjqegzgcqs5g3wha66f3p08t8erv04n4weca43v4jhdrpqsc5f5mh2zx0pa4k04v34eqy4ns2d',
           amount: {
-            coin: '96831683',
-            multiasset: null,
+            coin: '90349185',
+            multiasset: {
+              '789ef8ae89617f34c07f7f6a12e4d65146f958c0bc15a97b4ff169f1': {
+                '6861707079636f696e': '2',
+              },
+            },
           },
           plutus_data: null,
           script_ref: null,
         },
       ],
-      fee: '168317',
-      ttl: '410021',
+      fee: '170253',
+      ttl: '69375029',
       certs: null,
       withdrawals: null,
       update: null,
@@ -98,9 +106,9 @@ it('sign tx', async () => {
     witness_set: {
       vkeys: [
         {
-          vkey: 'ed25519_pk158upnx4mxw2wh75vy34vmcmvvvv7ayj78skgtwk9z4we2u4fxlaq3nmlqw',
+          vkey: 'ed25519_pk1ha3hdtpzuyavyp4n8jmk37rd9df6yxsqrqjl0q9znx6mgytn44hsukj73v',
           signature:
-            '0ddd53188bd5594015a061e99cb31e5fbd68c2e20aa85f0fbf64ab3aac980e090ddd618352f477c12466aa1ec81516e3afc6d277b424e8d32e7463054f6df903',
+            '4852585ca64dcfa8d536a75c4d1b3b53964247c1f00be58bc6cb6aad9ed921358cbbe3d2d9ba19fe8653256234117c0750c8cf03fdf5478d1a6e7f434b8a0d02',
         },
       ],
       native_scripts: null,

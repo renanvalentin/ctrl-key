@@ -41,8 +41,6 @@ export const Send = () => {
       password: state.password,
     });
 
-    console.log(walletId);
-
     navigation.navigate('Summary', {
       walletId,
     });
