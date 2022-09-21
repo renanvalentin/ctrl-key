@@ -9,6 +9,15 @@ import {
   RewardAddress,
   encrypt_with_password,
   decrypt_with_password,
+  TransactionBody,
+  hash_transaction,
+  Vkeywitnesses,
+  make_vkey_witness,
+  TransactionHash,
+  PrivateKey,
+  TransactionWitnessSet,
+  Transaction,
+  AuxiliaryData,
 } from '@emurgo/cardano-serialization-lib-nodejs';
 
 class Bip32PrivateKeyMock {
@@ -26,6 +35,12 @@ class Bip32PrivateKeyMock {
     );
   }
 
+  static from_bytes(bytes: Uint8Array) {
+    return Promise.resolve(
+      new Bip32PrivateKeyMock(Bip32PrivateKey.from_bytes(bytes)),
+    );
+  }
+
   derive(idx: number) {
     return Promise.resolve(
       new Bip32PrivateKeyMock(this.privateKey.derive(idx)),
@@ -38,6 +53,14 @@ class Bip32PrivateKeyMock {
 
   as_bytes() {
     return Promise.resolve(this.privateKey.as_bytes());
+  }
+
+  to_raw_key() {
+    return Promise.resolve(this.privateKey.to_raw_key());
+  }
+
+  to_bech32() {
+    return Promise.resolve(this.privateKey.to_bech32());
   }
 }
 
@@ -157,12 +180,41 @@ class RewardAddressMock {
   }
 }
 
+class TransactionBodyMock {
+  static from_bytes(bytes: Uint8Array) {
+    return Promise.resolve(TransactionBody.from_bytes(bytes));
+  }
+}
+
+class VkeywitnessesMock {
+  static new() {
+    return Promise.resolve(Vkeywitnesses.new());
+  }
+}
+
+class TransactionWitnessSetMock {
+  static new() {
+    return Promise.resolve(TransactionWitnessSet.new());
+  }
+}
+
+class TransactionMock {
+  static new(
+    body: TransactionBody,
+    witnessSet: TransactionWitnessSet,
+    auxiliary?: AuxiliaryData | undefined,
+  ) {
+    return Promise.resolve(Transaction.new(body, witnessSet, auxiliary));
+  }
+}
+
 export const CSL = {
   StakeCredential: {
     from_keyhash: StakeCredentialMock.from_keyhash,
   },
   Bip32PrivateKey: {
     from_bip39_entropy: Bip32PrivateKeyMock.from_bip39_entropy,
+    from_bytes: Bip32PrivateKeyMock.from_bytes,
   },
   Bip32PublicKey: {
     from_bech32: Bip32PublicKeyMock.from_bech32,
@@ -181,4 +233,20 @@ export const CSL = {
   ) => Promise.resolve(encrypt_with_password(password, salt, nonce, data)),
   decrypt_with_password: (password: string, data: string) =>
     Promise.resolve(decrypt_with_password(password, data)),
+  TransactionBody: {
+    from_bytes: TransactionBodyMock.from_bytes,
+  },
+  hash_transaction: (txBody: TransactionBody) =>
+    Promise.resolve(hash_transaction(txBody)),
+  Vkeywitnesses: {
+    new: VkeywitnessesMock.new,
+  },
+  make_vkey_witness: (txBodyHash: TransactionHash, sk: PrivateKey) =>
+    Promise.resolve(make_vkey_witness(txBodyHash, sk)),
+  TransactionWitnessSet: {
+    new: TransactionWitnessSetMock.new,
+  },
+  Transaction: {
+    new: TransactionMock.new,
+  },
 };

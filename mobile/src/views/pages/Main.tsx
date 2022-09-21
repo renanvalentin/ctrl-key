@@ -44,6 +44,14 @@ export const Main = () => {
                   }
                   title="Open"
                 />
+                <Button
+                  onPress={() =>
+                    navigation.navigate('Send', {
+                      walletId: wallet.id,
+                    })
+                  }
+                  title="Send"
+                />
               </View>
             ))}
           </View>

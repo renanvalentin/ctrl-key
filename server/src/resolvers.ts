@@ -16,6 +16,8 @@ export const resolvers: Resolvers = {
     ) {
       return TransactionQuery.buildTx(stakeAddress, value, paymentAddress);
     },
-    hello: () => 'Hello',
+    submitTx(_: unknown, { tx }: { tx: string }) {
+      return TransactionQuery.submitTx(tx);
+    },
   },
 };

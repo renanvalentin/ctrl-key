@@ -13,6 +13,10 @@ const query = `
     value: {lovelace: "3000000", assets: []}
   ) {
     hex
+    witnessesAddress {
+      size
+      inputAddresses
+    }
   }
 }
 `;
@@ -23,12 +27,24 @@ describe('transaction queries', function () {
       query,
     });
 
+    const existingAddresses = new Set([
+      'addr_test1qp0kjlqhv0qj4922hmez460nrjqegzgcqs5g3wha66f3p08t8erv04n4weca43v4jhdrpqsc5f5mh2zx0pa4k04v34eqy4ns2d',
+      'addr_test1qptqxwfvcev04a3td7n9z5gynar5vdcjhertyws0hrxr6c0t8erv04n4weca43v4jhdrpqsc5f5mh2zx0pa4k04v34eqh8jnvu',
+      'addr_test1qra2njhhucffhtfwq3zyvz3h9huqd87d83zay44h2a6nj0lt8erv04n4weca43v4jhdrpqsc5f5mh2zx0pa4k04v34eq32w05z',
+    ]);
+
     expect(response.status).toEqual(200);
+
+    const { witnessesAddress, hex } = response.body.data.buildTx;
+
+    expect(witnessesAddress.size).toEqual(3);
     expect(
-      CSL.TransactionBody.from_hex(
-        response.body.data.buildTx.hex,
-      ).to_js_value(),
-    ).toEqual({
+      witnessesAddress.inputAddresses.every((addr: string) =>
+        existingAddresses.has(addr),
+      ),
+    ).toBeTruthy();
+
+    expect(CSL.TransactionBody.from_hex(hex).to_js_value()).toEqual({
       inputs: [
         {
           transaction_id:
@@ -63,7 +79,7 @@ describe('transaction queries', function () {
         },
       ],
       fee: '170253',
-      ttl: '410021',
+      ttl: expect.any(String),
       certs: null,
       withdrawals: null,
       update: null,

@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
 import { SERVER_URL } from './config';
-import { Main, Summary, RestoreWallet } from './views';
+import { Main, Summary, RestoreWallet, Send } from './views';
 
 const client = new ApolloClient({
   uri: SERVER_URL,
@@ -21,6 +21,7 @@ const App = () => {
           <Stack.Screen name="Main" component={Main} />
           <Stack.Screen name="RestoreWallet" component={RestoreWallet} />
           <Stack.Screen name="Summary" component={Summary} />
+          <Stack.Screen name="Send" component={Send} />
         </Stack.Navigator>
       </NavigationContainer>
     </ApolloProvider>

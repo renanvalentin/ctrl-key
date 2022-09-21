@@ -1,9 +1,7 @@
 import uuid from 'react-native-uuid';
 import { CSL } from '../cardano-serialization-lib';
 import * as hdWallets from '../hd-wallets';
-import { api } from '../blockfrost';
 import * as crypto from '../crypto';
-import { Account, AccountModel } from './account';
 
 export interface SerializedWallet {
   id: string;
@@ -22,7 +20,11 @@ export interface WalletModel {
   readonly stakeAddress: string;
   readonly paymentAddresses: string[];
   serialize(): Promise<SerializedWallet>;
-  account(): Promise<AccountModel>;
+  signTx(
+    txBody: string,
+    password: string,
+    witnessesAddress: [],
+  ): Promise<CSL.Transaction>;
 }
 
 export interface CreateWalletArgs {
@@ -49,6 +51,7 @@ export class Wallet implements WalletModel {
   readonly paymentVerificationKey: CSL.Bip32PublicKey;
   readonly stakeVerificationKey: CSL.Bip32PublicKey;
   readonly paymentAddresses: string[];
+  readonly stakeAddress: string;
 
   constructor({
     id,
@@ -67,15 +70,65 @@ export class Wallet implements WalletModel {
     this.paymentAddresses = paymentAddresses;
     this.stakeAddress = stakeAddress;
   }
-  stakeAddress: string;
 
-  async account(): Promise<Account> {
-    const account = await api.accounts(this.stakeAddress);
-    return new Account({
-      stakeAddress: account.stake_address,
-      availableRewards: BigInt(account.withdrawable_amount),
-      totalAvailable: BigInt(account.controlled_amount),
-    });
+  async signTx(
+    txBodyEncoded: string,
+    password: string,
+    witnessesAddress: string[],
+  ): Promise<CSL.Transaction> {
+    const txBody = await CSL.TransactionBody.from_bytes(
+      Buffer.from(txBodyEncoded, 'hex'),
+    );
+
+    const txHash = await CSL.hash_transaction(txBody);
+
+    const bip32PrivateKey = await crypto.decryptWithPassword(
+      password,
+      this.encryptedRootKey,
+    );
+
+    const accountPrivateKey = await hdWallets.addresses.createAccountPrivateKey(
+      bip32PrivateKey,
+    );
+
+    const vkeyWitnesses = await this.createVKeyWitnesses(
+      accountPrivateKey,
+      witnessesAddress,
+      txHash,
+    );
+
+    const witnesses = await CSL.TransactionWitnessSet.new();
+    await witnesses.set_vkeys(vkeyWitnesses);
+
+    return CSL.Transaction.new(
+      txBody,
+      witnesses,
+      undefined, // transaction metadata
+    );
+  }
+
+  private async createVKeyWitnesses(
+    accountPrivateKey: CSL.Bip32PrivateKey,
+    inputAddresses: string[],
+    txHash: CSL.TransactionHash,
+  ) {
+    const signingKeys = await hdWallets.addresses.discoverSigningAddresses(
+      accountPrivateKey,
+      inputAddresses,
+    );
+
+    const rawKeys = await Promise.all(signingKeys.map(k => k.to_raw_key()));
+
+    const vkeyWitnesses = await CSL.Vkeywitnesses.new();
+
+    await Promise.all(
+      rawKeys.map(async key => {
+        const vkeyWitness = await CSL.make_vkey_witness(txHash, key);
+        return vkeyWitnesses.add(vkeyWitness);
+      }),
+    );
+
+    return vkeyWitnesses;
   }
 
   static async create({ name, seedWords, salt, password }: CreateWalletArgs) {

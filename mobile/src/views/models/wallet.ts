@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { Wallet } from '@ctrlK/core';
+import { Wallet, WalletModel } from '@ctrlK/core';
 import { format, fromUnixTime } from 'date-fns';
 import { TxDirection, Wallet as WalletSchema } from '@ctrl-k/schema';
 

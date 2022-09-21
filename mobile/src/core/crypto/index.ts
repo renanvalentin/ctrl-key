@@ -15,16 +15,18 @@ export const encryptWithPassword = async (
   return CSL.encrypt_with_password(passwordHex, salt, nonce, rootKeyHex);
 };
 
-export const decryptWithPassword = (
+export const decryptWithPassword = async (
   password: string,
   encryptedKeyHex: string,
-): Promise<string> => {
+): Promise<CSL.Bip32PrivateKey> => {
   const passwordHex = Buffer.from(password).toString('hex');
-  let decryptedHex;
   try {
-    decryptedHex = CSL.decrypt_with_password(passwordHex, encryptedKeyHex);
+    let decryptedHex = await CSL.decrypt_with_password(
+      passwordHex,
+      encryptedKeyHex,
+    );
+    return CSL.Bip32PrivateKey.from_bytes(Buffer.from(decryptedHex, 'hex'));
   } catch (err) {
     throw new Error('Wrong password');
   }
-  return decryptedHex;
 };

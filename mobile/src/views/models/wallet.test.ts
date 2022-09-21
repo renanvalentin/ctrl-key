@@ -6,7 +6,7 @@ jest.mock('../../core/cardano-serialization-lib', () => ({
   ...require('../../__tests__/cardano-serialization-lib'),
 }));
 
-it('retrieve wallet data', async () => {
+it('wallet summary', async () => {
   const name = 'w';
   const summary = WalletViewModel.summary(name, fixtures.wallet);
 
@@ -59,4 +59,4 @@ it('retrieve wallet data', async () => {
       },
     ],
   });
-}, 30_000_000);
+});

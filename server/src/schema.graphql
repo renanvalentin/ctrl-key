@@ -5,7 +5,7 @@ type Query {
     value: TxValue!
     paymentAddress: String!
   ): TxBody!
-  hello: String!
+  submitTx(tx: String!): TxResult!
 }
 
 type Wallet {
@@ -29,6 +29,7 @@ enum TxDirection {
 
 type TxBody {
   hex: String!
+  witnessesAddress: [String!]!
 }
 
 input TxValue {
@@ -39,4 +40,8 @@ input TxValue {
 input EncodedAsset {
   hex: String!
   quantity: String!
+}
+
+type TxResult {
+  hash: String!
 }

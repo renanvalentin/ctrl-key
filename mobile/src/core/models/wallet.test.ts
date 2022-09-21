@@ -1,4 +1,5 @@
 import { Wallet } from './wallet';
+import { Transaction } from '@emurgo/cardano-serialization-lib-nodejs';
 
 jest.mock('../cardano-serialization-lib', () => ({
   __esModule: true,
@@ -25,8 +26,9 @@ it('serialize wallet', async () => {
   expect(wallet.paymentAddresses).toEqual(deserializedWallet.paymentAddresses);
 });
 
-it('retrieve wallet data', async () => {
-  const password = 'pass';
+
+it('sign tx', async () => {
+  const salt = 'pass';
 
   const seedWords = process.env.MNEMONIC;
 
@@ -35,83 +37,79 @@ it('retrieve wallet data', async () => {
   const wallet = await Wallet.create({
     name,
     seedWords,
-    password,
+    password: salt,
+    salt,
   });
 
-  console.log(wallet.stakeAddress);
+  const txHex =
+    'a400818258202ac7d239675972200bc664576fee67e23eacb70ff5943f985b9f64d1ae82e19600018282583900faa9caf7e6129bad2e0444460a372df8069fcd3c45d256b75775393feb3e46c7d6757671dac59595da308218a269bba846787b5b3eac8d721a002dc6c0825839005f697c1763c12a954abef22ae9f31c81940918042888bafdd69310bceb3e46c7d6757671dac59595da308218a269bba846787b5b3eac8d721a05c588c3021a0002917d031a000641a5';
 
-  const account = await wallet.account();
+  const tx = await wallet.signTx(txHex, salt);
 
-  const addresses = await account.addresses();
+  const txBytes = await tx.to_bytes();
 
-  expect(addresses).toEqual([
-    {
-      address:
-        'addr_test1qp0kjlqhv0qj4922hmez460nrjqegzgcqs5g3wha66f3p08t8erv04n4weca43v4jhdrpqsc5f5mh2zx0pa4k04v34eqy4ns2d',
+  expect(Transaction.from_bytes(txBytes).to_js_value()).toEqual({
+    body: {
+      inputs: [
+        {
+          transaction_id:
+            '2ac7d239675972200bc664576fee67e23eacb70ff5943f985b9f64d1ae82e196',
+          index: 0,
+        },
+      ],
+      outputs: [
+        {
+          address:
+            'addr_test1qra2njhhucffhtfwq3zyvz3h9huqd87d83zay44h2a6nj0lt8erv04n4weca43v4jhdrpqsc5f5mh2zx0pa4k04v34eq32w05z',
+          amount: {
+            coin: '3000000',
+            multiasset: null,
+          },
+          plutus_data: null,
+          script_ref: null,
+        },
+        {
+          address:
+            'addr_test1qp0kjlqhv0qj4922hmez460nrjqegzgcqs5g3wha66f3p08t8erv04n4weca43v4jhdrpqsc5f5mh2zx0pa4k04v34eqy4ns2d',
+          amount: {
+            coin: '96831683',
+            multiasset: null,
+          },
+          plutus_data: null,
+          script_ref: null,
+        },
+      ],
+      fee: '168317',
+      ttl: '410021',
+      certs: null,
+      withdrawals: null,
+      update: null,
+      auxiliary_data_hash: null,
+      validity_start_interval: null,
+      mint: null,
+      script_data_hash: null,
+      collateral: null,
+      required_signers: null,
+      network_id: null,
+      collateral_return: null,
+      total_collateral: null,
+      reference_inputs: null,
     },
-    {
-      address:
-        'addr_test1qptqxwfvcev04a3td7n9z5gynar5vdcjhertyws0hrxr6c0t8erv04n4weca43v4jhdrpqsc5f5mh2zx0pa4k04v34eqh8jnvu',
+    witness_set: {
+      vkeys: [
+        {
+          vkey: 'ed25519_pk158upnx4mxw2wh75vy34vmcmvvvv7ayj78skgtwk9z4we2u4fxlaq3nmlqw',
+          signature:
+            '0ddd53188bd5594015a061e99cb31e5fbd68c2e20aa85f0fbf64ab3aac980e090ddd618352f477c12466aa1ec81516e3afc6d277b424e8d32e7463054f6df903',
+        },
+      ],
+      native_scripts: null,
+      bootstraps: null,
+      plutus_scripts: null,
+      plutus_data: null,
+      redeemers: null,
     },
-    {
-      address:
-        'addr_test1qra2njhhucffhtfwq3zyvz3h9huqd87d83zay44h2a6nj0lt8erv04n4weca43v4jhdrpqsc5f5mh2zx0pa4k04v34eq32w05z',
-    },
-  ]);
-
-  const txs = await (
-    await Promise.all(addresses.map(addr => addr.transactions()))
-  ).flatMap(tx => tx);
-
-  expect(txs).toEqual([
-    {
-      hash: '6d8ab0f38c5748e6fd59e04ec162c098784b27cbaaca6d2d1ab702e01f29a97c',
-      blockTime: 1662685090,
-      fees: 182221,
-    },
-    {
-      hash: '378eac004bdec2421456d507b8549eedd69955182e29d469c3b2833f6473d5ce',
-      blockTime: 1662685007,
-      fees: 179801,
-    },
-    {
-      hash: '03bb413faf369b8990b95eb5c0f1ca08c0f8199ea32b31ea7501f70f3c60ba89',
-      blockTime: 1662602880,
-      fees: 171441,
-    },
-    {
-      hash: '7b94e19a39d437ea8ae8a836309b1c39f9b549f0cd02eefd271ee83975ac5893',
-      blockTime: 1662601557,
-      fees: 179757,
-    },
-    {
-      hash: '86b6173a53568e464bafce315ec6f61de0d5c180e144d9c2c57b86bb012fc0d2',
-      blockTime: 1662601462,
-      fees: 892330,
-    },
-    {
-      hash: '87eb5358c1480739beed120e99e43ffc7e2c4a518bfb0a07c268a47e1db08b5b',
-      blockTime: 1662514094,
-      fees: 177513,
-    },
-    {
-      hash: '6d8ab0f38c5748e6fd59e04ec162c098784b27cbaaca6d2d1ab702e01f29a97c',
-      blockTime: 1662685090,
-      fees: 182221,
-    },
-    {
-      hash: '03bb413faf369b8990b95eb5c0f1ca08c0f8199ea32b31ea7501f70f3c60ba89',
-      blockTime: 1662602880,
-      fees: 171441,
-    },
-    {
-      hash: '6d8ab0f38c5748e6fd59e04ec162c098784b27cbaaca6d2d1ab702e01f29a97c',
-      blockTime: 1662685090,
-      fees: 182221,
-    },
-  ]);
-
-  // const utxo = await Promise.all(txs.map(tx => tx.utxo()));
-
-  // console.log(JSON.stringify(utxo, null, 2));
-}, 30_000_000);
+    is_valid: true,
+    auxiliary_data: null,
+  });
+});
