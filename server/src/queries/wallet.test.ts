@@ -1,5 +1,7 @@
+/** @jest-environment setup-polly-jest/jest-environment-node */
 import { createServer } from '@graphql-yoga/node';
 import request from 'supertest';
+import { autoSetupPolly } from '../polly';
 import { schema } from '../schema';
 
 const yoga = createServer({ schema });
@@ -21,17 +23,76 @@ const query = `
 `;
 
 describe('query wallet', function () {
+  let pollyContext = autoSetupPolly();
+
   it('responds with json', async function () {
     const response = await request(yoga).post('/graphql').send({
       query,
     });
 
     expect(response.status).toEqual(200);
+
     expect(response.body.data).toEqual({
       wallet: {
-        balance: '11538668',
-        marketPrice: expect.any(String),
+        balance: '90349185',
+        marketPrice: 0.461053,
         txs: [
+          {
+            type: 'Outgoing',
+            amount: '-2170253',
+            fees: '170253',
+            date: 1663722691,
+            id: 'de9280ec0b2ef7fa2dd69f7623600a8f4df27595879cacb642bc854df74eedc4',
+          },
+          {
+            type: 'Outgoing',
+            amount: '-8171837',
+            fees: '171837',
+            date: 1663720589,
+            id: 'e7e9e5d74f2c5a00828cd1f638ec0991ea198d30a55c6fccb81f8ea32b425f04',
+          },
+          {
+            type: 'Outgoing',
+            amount: '-2170253',
+            fees: '170253',
+            date: 1663720573,
+            id: 'b729c01c4b8ecb5bbbb3d6505fa3d43ed7be00f69a1a9d2dbb1f38551403477d',
+          },
+          {
+            type: 'Outgoing',
+            amount: '-2168317',
+            fees: '168317',
+            date: 1663705384,
+            id: 'f1176f6bc7d062b3a64e3b2d2998d93e31a4f716b250719b914971dbe52793c3',
+          },
+          {
+            type: 'Outgoing',
+            amount: '-2170253',
+            fees: '170253',
+            date: 1663705283,
+            id: 'd5d855d5ef150284659b4bbd7a3b71614ce6cf93a936aed4e5323e0252d2c55a',
+          },
+          {
+            type: 'Outgoing',
+            amount: '-2168317',
+            fees: '168317',
+            date: 1663701859,
+            id: 'fdba856e2688cb36e1a382c2c5e1a70bd37e792bc5505e03157448435261a671',
+          },
+          {
+            type: 'Outgoing',
+            amount: '-2170253',
+            fees: '170253',
+            date: 1663701828,
+            id: 'abe6bde0016f8a6fa7e0bc31cb238f3cbb834b429679cf6073373063e9940021',
+          },
+          {
+            type: 'Incoming',
+            amount: '100000000',
+            fees: null,
+            date: 1663351058,
+            id: '2ac7d239675972200bc664576fee67e23eacb70ff5943f985b9f64d1ae82e196',
+          },
           {
             type: 'Outgoing',
             amount: '-2182221',
@@ -77,5 +138,7 @@ describe('query wallet', function () {
         ],
       },
     });
+
+    await pollyContext.polly.stop();
   });
 });

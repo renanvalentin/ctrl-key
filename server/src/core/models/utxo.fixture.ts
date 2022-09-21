@@ -210,7 +210,7 @@ export const multipleAssets = {
     {
       address:
         'addr_test1qptqxwfvcev04a3td7n9z5gynar5vdcjhertyws0hrxr6c0t8erv04n4weca43v4jhdrpqsc5f5mh2zx0pa4k04v34eqh8jnvu',
-      value: {
+      value: new TxValue({
         lovelace: 3720889n,
         assets: [
           {
@@ -218,12 +218,12 @@ export const multipleAssets = {
             quantity: 1n,
           },
         ],
-      },
+      }),
     },
     {
       address:
         'addr_test1qp0kjlqhv0qj4922hmez460nrjqegzgcqs5g3wha66f3p08t8erv04n4weca43v4jhdrpqsc5f5mh2zx0pa4k04v34eqy4ns2d',
-      value: {
+      value: new TxValue({
         lovelace: 10000000n,
         assets: [
           {
@@ -231,14 +231,14 @@ export const multipleAssets = {
             quantity: 4n,
           },
         ],
-      },
+      }),
     },
   ],
   outputs: [
     {
       address:
         'addr_test1qr4dunsckeyvgc92u2qxvgvqjayx865pzr4x5ljzn5g4gwfx5nug0rl07jrccgshdhzr4ya63t6nexm4zfx6mn6pnnaq24fcg2',
-      value: {
+      value: new TxValue({
         lovelace: 2000000n,
         assets: [
           {
@@ -250,12 +250,12 @@ export const multipleAssets = {
             quantity: 1n,
           },
         ],
-      },
+      }),
     },
     {
       address:
         'addr_test1qra2njhhucffhtfwq3zyvz3h9huqd87d83zay44h2a6nj0lt8erv04n4weca43v4jhdrpqsc5f5mh2zx0pa4k04v34eq32w05z',
-      value: {
+      value: new TxValue({
         lovelace: 11538668n,
         assets: [
           {
@@ -263,7 +263,7 @@ export const multipleAssets = {
             quantity: 2n,
           },
         ],
-      },
+      }),
     },
   ],
 };

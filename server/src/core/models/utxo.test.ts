@@ -35,7 +35,7 @@ it('calculate received amount', async () => {
 
   const txType = utxo.txValue([address]);
 
-  expect(txType).toEqual({ lovelace: 2_000_000n, assets: [] });
+  expect(txType.serialize()).toEqual({ lovelace: 2_000_000, assets: [] });
 });
 
 it('calculate withdrawal amount', async () => {
@@ -47,7 +47,7 @@ it('calculate withdrawal amount', async () => {
 
   const txType = utxo.txValue([address]);
 
-  expect(txType).toEqual({ lovelace: -2_000_000n, assets: [] });
+  expect(txType.serialize()).toEqual({ lovelace: -2_000_000, assets: [] });
 });
 
 it('calculate assets', async () => {
@@ -59,12 +59,12 @@ it('calculate assets', async () => {
 
   const txType = utxo.txValue([address]);
 
-  expect(txType).toEqual({
-    lovelace: 5_000_000n,
+  expect(txType.serialize()).toEqual({
+    lovelace: 5_000_000,
     assets: [
       {
         hex: '94d4cdbcffb09ebd4780d94f932a657dc4852530fa8013df66c72d4c676f6f64636f696e',
-        quantity: 1n,
+        quantity: 1,
       },
     ],
   });
@@ -87,16 +87,16 @@ it('multiple addresses', async () => {
 
   const txType = utxo.txValue([address, address2, address3]);
 
-  expect(txType).toEqual({
-    lovelace: -2_182_221n,
+  expect(txType.serialize()).toEqual({
+    lovelace: -2_182_221,
     assets: [
       {
         hex: '94d4cdbcffb09ebd4780d94f932a657dc4852530fa8013df66c72d4c676f6f64636f696e',
-        quantity: -1n,
+        quantity: -1,
       },
       {
         hex: '789ef8ae89617f34c07f7f6a12e4d65146f958c0bc15a97b4ff169f16861707079636f696e',
-        quantity: -2n,
+        quantity: -2,
       },
     ],
   });

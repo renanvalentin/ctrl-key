@@ -1,5 +1,6 @@
 import { EncodedAsset, TxValueModel, TxValue } from './tx-value';
 import { AddressModel } from './address';
+import { Serializable, toObject } from './serializable';
 
 export interface TxIn {
   address: string;
@@ -16,9 +17,12 @@ export enum TxDirections {
   Incoming = 'Incoming',
 }
 
-export interface UtxoModel {
+interface Props {
   readonly inputs: TxIn[];
   readonly outputs: TxOut[];
+}
+
+export interface UtxoModel extends Serializable<UtxoModel, Props>, Props {
   direction(addresses: AddressModel[]): TxDirections;
   txValue(addresses: AddressModel[]): TxValueModel;
 }
@@ -30,6 +34,17 @@ export class Utxo implements UtxoModel {
   constructor(utxo: { inputs: TxIn[]; outputs: TxOut[] }) {
     this.inputs = utxo.inputs;
     this.outputs = utxo.outputs;
+  }
+
+  serialize(): Props {
+    return toObject<Props>({
+      inputs: this.inputs,
+      outputs: this.outputs,
+    });
+  }
+
+  deserialize({ inputs, outputs }: Props) {
+    return new Utxo({ inputs, outputs });
   }
 
   direction(fromAddresses: AddressModel[]): TxDirections {

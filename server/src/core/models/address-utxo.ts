@@ -1,5 +1,6 @@
 import { CSL } from '../cardano-serialization-lib';
-import { TxValueModel } from './tx-value';
+import { Serializable, toObject } from './serializable';
+import { TxValueModel, Props as TxValueProps, TxValue } from './tx-value';
 
 interface Props {
   readonly address: string;
@@ -8,7 +9,13 @@ interface Props {
   readonly value: TxValueModel;
 }
 
-export interface AddressUtxoModel extends Props {
+type Serialized = Omit<Props, 'value'> & {
+  value: TxValueProps;
+};
+
+export interface AddressUtxoModel
+  extends Props,
+    Serializable<AddressUtxo, Serialized> {
   toTransactionUnspentOutput: () => CSL.TransactionUnspentOutput;
 }
 
@@ -23,6 +30,29 @@ export class AddressUtxo implements AddressUtxoModel {
     this.txHash = txHash;
     this.value = value;
     this.address = address;
+  }
+
+  serialize(): Serialized {
+    return toObject({
+      address: this.address,
+      outputIndex: this.outputIndex,
+      txHash: this.txHash,
+      value: this.value.serialize(),
+    });
+  }
+
+  deserialize({
+    address,
+    outputIndex,
+    txHash,
+    value,
+  }: Serialized): AddressUtxo {
+    return new AddressUtxo({
+      address,
+      outputIndex,
+      txHash,
+      value: new TxValue({ ...value }),
+    });
   }
 
   toTransactionUnspentOutput = () =>

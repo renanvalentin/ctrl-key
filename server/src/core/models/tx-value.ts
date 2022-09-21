@@ -1,8 +1,12 @@
 import { CSL } from '../cardano-serialization-lib';
+import { Serializable, toObject } from './serializable';
 
-export interface TxValueModel {
+export interface Props {
   readonly lovelace: bigint;
   readonly assets: EncodedAsset[];
+}
+
+export interface TxValueModel extends Props, Serializable<TxValueModel, Props> {
   toValue(): CSL.Value;
 }
 
@@ -19,6 +23,17 @@ export class TxValue implements TxValueModel {
   }) {
     this.lovelace = lovelace;
     this.assets = assets;
+  }
+
+  serialize(): Props {
+    return toObject<Props>({
+      assets: this.assets,
+      lovelace: this.lovelace,
+    });
+  }
+
+  deserialize({ assets, lovelace }: Props): TxValueModel {
+    return new TxValue({ assets, lovelace });
   }
 
   toValue = (): CSL.Value => {

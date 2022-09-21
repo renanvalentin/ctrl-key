@@ -9,6 +9,7 @@ on:
 env:
   MNEMONIC: ${{ secrets.MNEMONIC }}
   BLOCKFROST_API_TOKEN: ${{ secrets.BLOCKFROST_API_TOKEN }}
+  POLLY_MODE: replay
 
 jobs:
   mobile:
@@ -44,7 +45,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Test
-        working-directory: mobile
+        working-directory: server
         run: |
           npm ci
+          export POLLY_MODE=replay
           TZ=America/New_York npm test
