@@ -7,15 +7,16 @@
     "start": "ts-node -r tsconfig-paths/register src/index.ts",
     "dev": "cross-env NODE_ENV=development ts-node-dev -r tsconfig-paths/register --exit-child --respawn src/index.ts",
     "test": "TZ='America/New_York' jest",
-    "codegen": "graphql-codegen"
+    "test:replay": "TZ='America/New_York',POLLY_MODE=replay jest",
+    "codegen": "graphql-codegen --config ./codegen.yaml"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@graphql-codegen/cli": "^2.12.0",
-    "@graphql-codegen/typescript": "^2.7.3",
-    "@graphql-codegen/typescript-resolvers": "^2.7.3",
+    "@graphql-codegen/cli": "2.11.4-alpha-c88238a3e.0",
+    "@graphql-codegen/typescript": "^2.7.2",
+    "@graphql-codegen/typescript-resolvers": "latest",
     "@pollyjs/adapter-fetch": "^6.0.5",
     "@pollyjs/adapter-node-http": "^6.0.5",
     "@pollyjs/core": "^6.0.5",
@@ -74,10 +75,12 @@
     "@graphql-tools/schema": "^9.0.4",
     "@graphql-yoga/node": "^2.13.13",
     "axios": "^0.27.2",
+    "dataloader": "^2.1.0",
     "debug": "^4.3.4",
     "graphql": "^16.6.0",
     "graphql-scalars": "^1.18.0",
     "json-bigint-patch": "^0.0.8",
+    "lru_map": "^0.4.1",
     "ramda": "^0.28.0",
     "uuid": "^9.0.0"
   }

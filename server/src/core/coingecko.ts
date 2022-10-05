@@ -5,13 +5,19 @@ const instance = axios.create({
   timeout: 1000,
 });
 
+export interface Price {
+  cardano: { usd: number };
+}
+
 interface API {
-  price(): Promise<{ cardano: { usd: number } }>;
+  price(currency: string): Promise<Price>;
 }
 
 export const coingecko: API = {
-  price: async () => {
-    const { data } = await instance.get('price?ids=cardano&vs_currencies=usd');
+  price: async (currency: string = 'usd') => {
+    const { data } = await instance.get(
+      `price?ids=cardano&vs_currencies=${currency}`,
+    );
     return data;
   },
 };

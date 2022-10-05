@@ -2,7 +2,6 @@ import path from 'path';
 import { setupPolly } from 'setup-polly-jest';
 import { Polly, PollyConfig } from '@pollyjs/core';
 import NodeHttpAdapter from '@pollyjs/adapter-node-http';
-import FetchAdapter from '@pollyjs/adapter-fetch';
 import FSPersister from '@pollyjs/persister-fs';
 
 Polly.register(NodeHttpAdapter);
@@ -10,6 +9,8 @@ Polly.register(FSPersister);
 
 let recordIfMissing = true;
 let mode: PollyConfig['mode'] = 'replay';
+
+console.log('POLLY_MODE', process.env.POLLY_MODE);
 
 switch (process.env.POLLY_MODE) {
   case 'record':
@@ -42,7 +43,7 @@ export function autoSetupPolly() {
     persister: require('@pollyjs/persister-fs'),
     persisterOptions: {
       fs: {
-        recordingsDir: path.resolve(__dirname, '../../__recordings__'),
+        recordingsDir: path.resolve(__dirname, '../__recordings__'),
       },
     },
   });

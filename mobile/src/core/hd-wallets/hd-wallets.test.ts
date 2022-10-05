@@ -25,12 +25,14 @@ it('restore private key', async () => {
     rootPrivateKey,
   );
 
+  const accountPublicKey = await accountPrivateKey.to_public();
+
   const paymentVerificationKey = await addresses.createPaymentVerificationKey(
-    accountPrivateKey,
+    accountPublicKey,
   );
 
   const stakeVerificationKey = await addresses.createStakeVerificationKey(
-    accountPrivateKey,
+    accountPublicKey,
   );
 
   const paymentAddress = await addresses.createPaymentAddress(
@@ -167,4 +169,23 @@ it('discover signing key', async () => {
   ]);
 
   expect(bech32SigningKeys).toEqual([privKey1, privKey2, privKey3]);
+});
+
+it('create from public key hex', async () => {
+  const chainCodeHex =
+    'bda8a3eb120ba26f5a5982742ee6a8b770520b0c4ad80bce403154ce7eb589d1';
+
+  const publicKeyHex =
+    '4b899d0cbbebeb6166a8ac3a71112e85e2db566facec0fdb502f38283c6fd56f';
+
+  const publicKey = await addresses.createPublicKeyFromHex(
+    publicKeyHex,
+    chainCodeHex,
+  );
+
+  const bech32 = await publicKey.to_bech32();
+
+  expect(bech32).toEqual(
+    'xpub1hk5286cjpw3x7kjesf6zae4gkac9yzcvftvqhnjqx92vul4438g5hzvapja7h6mpv652cwn3zyhgtckm2eh6emq0mdgz7wpg83ha2mckdfzkl',
+  );
 });

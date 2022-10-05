@@ -3,8 +3,9 @@ import { createServer } from '@graphql-yoga/node';
 import request from 'supertest';
 import { autoSetupPolly } from '../polly';
 import { schema } from '../schema';
+import { context } from '../context';
 
-const yoga = createServer({ schema });
+const yoga = createServer({ schema, context });
 
 const query = `
 {  
@@ -34,9 +35,16 @@ describe('query wallet', function () {
 
     expect(response.body.data).toEqual({
       wallet: {
-        balance: '90349185',
+        balance: '98178932',
         marketPrice: 0.461053,
         txs: [
+          {
+            type: 'Outgoing',
+            amount: '-2170253',
+            fees: '170253',
+            date: 1663806553,
+            id: 'cfdf7f8e998e66f425e7e1502e644ad1208d3da27132f68b59511e2b9db9ff70',
+          },
           {
             type: 'Outgoing',
             amount: '-2170253',
@@ -134,6 +142,13 @@ describe('query wallet', function () {
             fees: null,
             date: 1662514094,
             id: '87eb5358c1480739beed120e99e43ffc7e2c4a518bfb0a07c268a47e1db08b5b',
+          },
+          {
+            type: 'Incoming',
+            amount: '10000000',
+            fees: null,
+            date: 1663894204,
+            id: '5cc577d7b441558a547bafbc8bd04e99f132b1205ef40175eddb930a040e3e93',
           },
         ],
       },

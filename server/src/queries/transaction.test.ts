@@ -15,7 +15,16 @@ const query = `
     value: {lovelace: "3000000", assets: []}
   ) {
     hex
-    witnessesAddress 
+    witnessesAddress
+    summary {
+      fees
+      paymentAddresses {
+        address
+        amount {
+          lovelace
+        }
+      }
+    } 
   }
 }
 `;
@@ -36,17 +45,30 @@ describe('transaction queries', function () {
 
     expect(response.status).toEqual(200);
 
-    const { witnessesAddress, hex } = response.body.data.buildTx;
+    const { witnessesAddress, hex, summary } = response.body.data.buildTx;
 
     expect(
       witnessesAddress.every((addr: string) => existingAddresses.has(addr)),
     ).toBeTruthy();
 
+    expect(summary).toEqual({
+      fees: '170253',
+      paymentAddresses: [
+        {
+          address:
+            'addr_test1qra2njhhucffhtfwq3zyvz3h9huqd87d83zay44h2a6nj0lt8erv04n4weca43v4jhdrpqsc5f5mh2zx0pa4k04v34eq32w05z',
+          amount: {
+            lovelace: '3000000',
+          },
+        },
+      ],
+    });
+
     expect(CSL.TransactionBody.from_hex(hex).to_js_value()).toEqual({
       inputs: [
         {
           transaction_id:
-            'de9280ec0b2ef7fa2dd69f7623600a8f4df27595879cacb642bc854df74eedc4',
+            'cfdf7f8e998e66f425e7e1502e644ad1208d3da27132f68b59511e2b9db9ff70',
           index: 1,
         },
       ],
@@ -65,7 +87,7 @@ describe('transaction queries', function () {
           address:
             'addr_test1qp0kjlqhv0qj4922hmez460nrjqegzgcqs5g3wha66f3p08t8erv04n4weca43v4jhdrpqsc5f5mh2zx0pa4k04v34eqy4ns2d',
           amount: {
-            coin: '87178932',
+            coin: '85008679',
             multiasset: {
               '789ef8ae89617f34c07f7f6a12e4d65146f958c0bc15a97b4ff169f1': {
                 '6861707079636f696e': '2',

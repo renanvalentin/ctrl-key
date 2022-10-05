@@ -12,6 +12,17 @@ export type Scalars = {
   Float: number;
 };
 
+export type Amount = {
+  __typename?: 'Amount';
+  lovelace: Scalars['String'];
+};
+
+export type Asset = {
+  __typename?: 'Asset';
+  name: Scalars['String'];
+  quantity: Scalars['String'];
+};
+
 export type EncodedAsset = {
   hex: Scalars['String'];
   quantity: Scalars['String'];
@@ -22,6 +33,7 @@ export type Query = {
   buildTx: TxBody;
   submitTx: TxResult;
   wallet: Wallet;
+  wallets: Array<Wallet>;
 };
 
 
@@ -41,6 +53,11 @@ export type QueryWalletArgs = {
   stakeAddress: Scalars['String'];
 };
 
+
+export type QueryWalletsArgs = {
+  stakeAddresses: Array<Scalars['String']>;
+};
+
 export type Tx = {
   __typename?: 'Tx';
   amount: Scalars['String'];
@@ -53,13 +70,26 @@ export type Tx = {
 export type TxBody = {
   __typename?: 'TxBody';
   hex: Scalars['String'];
+  summary: TxBodySummary;
   witnessesAddress: Array<Scalars['String']>;
+};
+
+export type TxBodySummary = {
+  __typename?: 'TxBodySummary';
+  fees: Scalars['String'];
+  paymentAddresses: Array<TxOutput>;
 };
 
 export enum TxDirection {
   Incoming = 'Incoming',
   Outgoing = 'Outgoing'
 }
+
+export type TxOutput = {
+  __typename?: 'TxOutput';
+  address: Scalars['String'];
+  amount: Amount;
+};
 
 export type TxResult = {
   __typename?: 'TxResult';

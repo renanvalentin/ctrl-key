@@ -21,13 +21,13 @@ export interface DiscoverAddress {
 const harden = (num: number): number => 0x80_00_00_00 + num;
 
 const derivePublicKey = async (
-  accountPrivateKey: CSL.Bip32PrivateKey,
+  accountPublicKey: CSL.Bip32PublicKey,
   changeType: AccountType,
   index: number,
 ): Promise<CSL.Bip32PublicKey> => {
-  const accountType = await accountPrivateKey.derive(changeType);
+  const accountType = await accountPublicKey.derive(changeType);
   const address = await accountType.derive(index);
-  return address.to_public();
+  return address;
 };
 
 export const createAccountPrivateKey = async (
@@ -50,15 +50,15 @@ export const createPaymentVerificationPrivateKey = async (
 };
 
 export const createPaymentVerificationKey = async (
-  accountPrivateKey: CSL.Bip32PrivateKey,
+  accountPublicKey: CSL.Bip32PublicKey,
   index: number = 0,
 ): Promise<CSL.Bip32PublicKey> =>
-  derivePublicKey(accountPrivateKey, AccountType.Receive, index);
+  derivePublicKey(accountPublicKey, AccountType.Receive, index);
 
 export const createStakeVerificationKey = (
-  accountPrivateKey: CSL.Bip32PrivateKey,
+  accountPublicKey: CSL.Bip32PublicKey,
 ): Promise<CSL.Bip32PublicKey> =>
-  derivePublicKey(accountPrivateKey, AccountType.Stake, 0);
+  derivePublicKey(accountPublicKey, AccountType.Stake, 0);
 
 export const createPaymentAddress = async (
   paymentVerificationKey: CSL.Bip32PublicKey,
@@ -193,4 +193,13 @@ export const discoverSigningAddresses = async (
   ]);
 
   return [...external, ...internal];
+};
+
+export const createPublicKeyFromHex = async (
+  chainCodeHex: string,
+  publicKeyHex: string,
+): Promise<CSL.Bip32PublicKey> => {
+  return CSL.Bip32PublicKey.from_bytes(
+    Buffer.from(publicKeyHex + chainCodeHex, 'hex'),
+  );
 };

@@ -18,6 +18,9 @@ import {
   TransactionWitnessSet,
   Transaction,
   AuxiliaryData,
+  AssetName,
+  Assets,
+  TransactionOutputs,
 } from '@emurgo/cardano-serialization-lib-nodejs';
 
 class Bip32PrivateKeyMock {
@@ -38,6 +41,12 @@ class Bip32PrivateKeyMock {
   static from_bytes(bytes: Uint8Array) {
     return Promise.resolve(
       new Bip32PrivateKeyMock(Bip32PrivateKey.from_bytes(bytes)),
+    );
+  }
+
+  static from_bech32(bech32_str: string) {
+    return Promise.resolve(
+      new Bip32PrivateKeyMock(Bip32PrivateKey.from_bech32(bech32_str)),
     );
   }
 
@@ -90,6 +99,12 @@ class Bip32PublicKeyMock {
   static from_bech32(bech32: string) {
     return Promise.resolve(
       new Bip32PublicKeyMock(Bip32PublicKey.from_bech32(bech32)),
+    );
+  }
+
+  static from_bytes(bytes: Uint8Array) {
+    return Promise.resolve(
+      new Bip32PublicKeyMock(Bip32PublicKey.from_bytes(bytes)),
     );
   }
 }
@@ -220,6 +235,22 @@ class TransactionMock {
   }
 }
 
+class AssetNameMock {
+  constructor(readonly assetName: AssetName) {}
+
+  static from_bytes(bytes: Uint8Array) {
+    return Promise.resolve(AssetName.from_bytes(bytes));
+  }
+}
+
+class AssetsMock {
+  constructor(readonly assetName: AssetName) {}
+
+  static from_bytes(bytes: Uint8Array) {
+    return Promise.resolve(AssetName.from_bytes(bytes));
+  }
+}
+
 export const CSL = {
   StakeCredential: {
     from_keyhash: StakeCredentialMock.from_keyhash,
@@ -227,9 +258,11 @@ export const CSL = {
   Bip32PrivateKey: {
     from_bip39_entropy: Bip32PrivateKeyMock.from_bip39_entropy,
     from_bytes: Bip32PrivateKeyMock.from_bytes,
+    from_bech32: Bip32PrivateKeyMock.from_bech32,
   },
   Bip32PublicKey: {
     from_bech32: Bip32PublicKeyMock.from_bech32,
+    from_bytes: Bip32PublicKeyMock.from_bytes,
   },
   BaseAddress: {
     new: BaseAddressMock.new,
@@ -260,5 +293,8 @@ export const CSL = {
   },
   Transaction: {
     new: TransactionMock.new,
+  },
+  AssetName: {
+    from_bytes: AssetNameMock.from_bytes,
   },
 };

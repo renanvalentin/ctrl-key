@@ -1,21 +1,34 @@
 import create from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { CreateWalletArgs, SerializedWallet, Wallet } from '@ctrlK/core';
+import {
+  SerializedWallet,
+  HotWallet,
+  CreateHotWalletArgs,
+  LedgerWallet,
+  WalletModel,
+  CreateLedgerWalletArgs,
+} from '@ctrlK/core';
 
 interface AppState {
-  wallets: Wallet[];
-  restoreWallet: (args: CreateWalletArgs) => Promise<string>;
-  getWalletById: (walletId: string) => Wallet;
+  wallets: WalletModel[];
+  restoreHotWallet: (args: CreateHotWalletArgs) => Promise<string>;
+  importLedgerWallet: (args: CreateLedgerWalletArgs) => Promise<string>;
+  getWalletById: (walletId: string) => WalletModel;
 }
 
 export const useAppStore = create<AppState>()(
   devtools(
     persist(
       (set, getState) => ({
-        wallets: [] as Wallet[],
-        restoreWallet: async args => {
-          const wallet = await Wallet.create(args);
+        wallets: [] as WalletModel[],
+        restoreHotWallet: async args => {
+          const wallet = await HotWallet.create(args);
+          set(state => ({ wallets: [...state.wallets, wallet] }));
+          return wallet.id;
+        },
+        importLedgerWallet: async args => {
+          const wallet = await LedgerWallet.create(args);
           set(state => ({ wallets: [...state.wallets, wallet] }));
           return wallet.id;
         },
@@ -46,7 +59,11 @@ export const useAppStore = create<AppState>()(
           const data: { wallets: SerializedWallet[] } = JSON.parse(str);
 
           const wallets = await Promise.all(
-            data.wallets.map(w => Wallet.deserialize(w)),
+            data.wallets.map(w =>
+              w.__type === 'cold'
+                ? LedgerWallet.deserialize(w)
+                : HotWallet.deserialize(w),
+            ),
           );
 
           return {

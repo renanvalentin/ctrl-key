@@ -16,7 +16,7 @@ export class TransactionQuery {
     stakeAddress: string,
     value: gql.TxValue,
     paymentAddress: string,
-  ) {
+  ): Promise<gql.TxBody> {
     try {
       const block = await Block.latest();
       const epoch = await Epoch.latest();
@@ -63,11 +63,32 @@ export class TransactionQuery {
         utxo,
       );
 
+      const paymentAddresses: gql.TxOutput[] = Array.from({
+        length: txBody.outputs().len(),
+      })
+        .map((_, idx) => {
+          const output = txBody.outputs().get(idx);
+          const amount = output.amount();
+
+          return {
+            address: output.address().to_bech32(),
+            amount: {
+              lovelace: amount.coin().to_str(),
+            },
+          };
+        })
+        .filter(o => o.address !== changeAddress.to_bech32());
+
       return {
         hex: txBody.to_hex(),
         witnessesAddress: inputAddresses,
+        summary: {
+          fees: txBody.fee().to_str(),
+          paymentAddresses,
+        },
       };
     } catch (err) {
+      console.log(err);
       logger('buildTx:err', err);
 
       throw err;

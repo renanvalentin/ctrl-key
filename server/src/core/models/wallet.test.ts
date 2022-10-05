@@ -39,6 +39,11 @@ describe('wallet', () => {
 
     expect(txs).toEqual([
       {
+        hash: 'cfdf7f8e998e66f425e7e1502e644ad1208d3da27132f68b59511e2b9db9ff70',
+        blockTime: 1663806553,
+        fees: 170253,
+      },
+      {
         hash: 'de9280ec0b2ef7fa2dd69f7623600a8f4df27595879cacb642bc854df74eedc4',
         blockTime: 1663722691,
         fees: 170253,
@@ -119,6 +124,11 @@ describe('wallet', () => {
         fees: 171441,
       },
       {
+        hash: '5cc577d7b441558a547bafbc8bd04e99f132b1205ef40175eddb930a040e3e93',
+        blockTime: 1663894204,
+        fees: 179801,
+      },
+      {
         hash: 'abe6bde0016f8a6fa7e0bc31cb238f3cbb834b429679cf6073373063e9940021',
         blockTime: 1663701828,
         fees: 170253,
@@ -129,6 +139,8 @@ describe('wallet', () => {
         fees: 182221,
       },
     ]);
+
+    await pollyContext.polly.stop();
 
     // const utxo = await Promise.all(txs.map(tx => tx.utxo()));
 

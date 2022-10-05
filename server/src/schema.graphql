@@ -1,5 +1,6 @@
 type Query {
   wallet(stakeAddress: String!): Wallet!
+  wallets(stakeAddresses: [String!]!): [Wallet!]!
   buildTx(
     stakeAddress: String!
     value: TxValue!
@@ -30,6 +31,7 @@ enum TxDirection {
 type TxBody {
   hex: String!
   witnessesAddress: [String!]!
+  summary: TxBodySummary!
 }
 
 input TxValue {
@@ -44,4 +46,29 @@ input EncodedAsset {
 
 type TxResult {
   hash: String!
+}
+
+type TxBodySummary {
+  fees: String!
+  paymentAddresses: [TxOutput!]!
+}
+
+type TxOutput {
+  address: String!
+  amount: Amount!
+}
+
+type Amount {
+  lovelace: String!
+  # multiAsset: [MultiAsset!]!
+}
+
+# type MultiAsset {
+#   hash: String!
+#   assets: [Asset!]!
+# }
+
+type Asset {
+  name: String!
+  quantity: String!
 }

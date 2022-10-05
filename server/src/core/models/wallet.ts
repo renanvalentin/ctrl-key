@@ -9,6 +9,11 @@ export interface SerializedWallet {
   stakeVerificationKey: string;
 }
 
+export type WalletModel2 = {
+  balance: string;
+  _marketPrice: string;
+};
+
 export interface WalletModel {
   readonly stakeAddress: string;
   account(): Promise<AccountModel>;
@@ -30,11 +35,19 @@ export class Wallet implements WalletModel {
   }
 
   async account(): Promise<Account> {
-    const account = await api.accounts(this.stakeAddress);
-    return new Account({
-      stakeAddress: account.stake_address,
-      availableRewards: BigInt(account.withdrawable_amount),
-      totalAvailable: BigInt(account.controlled_amount),
-    });
+    try {
+      const account = await api.accounts(this.stakeAddress);
+      return new Account({
+        stakeAddress: account.stake_address,
+        availableRewards: BigInt(account.withdrawable_amount),
+        totalAvailable: BigInt(account.controlled_amount),
+      });
+    } catch (err) {
+      return new Account({
+        stakeAddress: this.stakeAddress,
+        availableRewards: BigInt(0),
+        totalAvailable: BigInt(0),
+      });
+    }
   }
 }

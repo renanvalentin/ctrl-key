@@ -1,6 +1,8 @@
 import { uniqWith, eqProps } from 'ramda';
-import { AddressModel, TxDirections, Wallet, coingecko } from '@ctrl-k/core';
+import { AddressModel, TxDirections, Wallet, WalletModel } from '@ctrl-k/core';
+
 import * as gql from '../resolvers-types';
+import { Context } from 'src/context';
 
 const getTxs = async (addresses: AddressModel[]) => {
   const txs = await (
@@ -11,12 +13,27 @@ const getTxs = async (addresses: AddressModel[]) => {
 };
 
 export class WalletQuery {
-  static async byStakeAddress(stakeAddress: string): Promise<gql.Wallet> {
+  static async byStakeAddress(stakeAddress: string): Promise<WalletModel> {
     const wallet = new Wallet({ stakeAddress });
-    const [account, price] = await Promise.all([
-      wallet.account(),
-      coingecko.price(),
-    ]);
+
+    return wallet;
+  }
+
+  static async balance(wallet: WalletModel, { accountDataLoader }: Context) {
+    const account = await accountDataLoader.load(wallet.stakeAddress);
+    return account.balance.toString();
+  }
+
+  static async marketPrice({ coingeckoDataLoader }: Context) {
+    const { cardano } = await coingeckoDataLoader.load('usd');
+    return cardano.usd;
+  }
+
+  static async txs(
+    wallet: WalletModel,
+    { accountDataLoader }: Context,
+  ): Promise<gql.Tx[]> {
+    const account = await accountDataLoader.load(wallet.stakeAddress);
 
     const addresses = await account.addresses();
 
@@ -40,12 +57,6 @@ export class WalletQuery {
       };
     });
 
-    const txsViews = await Promise.all(txViewRequests);
-
-    return {
-      marketPrice: price.cardano.usd,
-      balance: account.balance.toString(),
-      txs: txsViews,
-    };
+    return Promise.all(txViewRequests);
   }
 }
