@@ -46,5 +46,10 @@ export function autoSetupPolly() {
         recordingsDir: path.resolve(__dirname, '../__recordings__'),
       },
     },
+    matchRequestsBy: {
+      url: {
+        port: false,
+      },
+    },
   });
 }
