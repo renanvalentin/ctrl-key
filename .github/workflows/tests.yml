@@ -28,7 +28,7 @@ jobs:
       - name: Test
         working-directory: mobile
         run: |
-          npm ci
+          npm ci --legacy-peer-deps
           TZ=America/New_York npm test
 
   server:
