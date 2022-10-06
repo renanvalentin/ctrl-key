@@ -73,6 +73,9 @@
       "@ctrl-k/config": "<rootDir>/src/config"
     }
   },
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "dependencies": {
     "@blockfrost/blockfrost-js": "^5.0.0",
     "@emurgo/cardano-serialization-lib-nodejs": "^11.0.5",

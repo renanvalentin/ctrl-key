@@ -2,6 +2,7 @@ import { TxDirection, Wallet } from '@ctrl-k/schema';
 
 export const wallet: Wallet = {
   balance: '11538668',
+  marketPrice: 40.48,
   txs: [
     {
       type: TxDirection.Outgoing,

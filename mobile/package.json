@@ -107,6 +107,7 @@
     "@types/ramda": "^0.28.15",
     "@types/react-native": "^0.69.5",
     "@types/react-test-renderer": "^18.0.0",
+    "@types/setup-polly-jest": "^0.5.1",
     "@typescript-eslint/eslint-plugin": "^5.29.0",
     "@typescript-eslint/parser": "^5.29.0",
     "babel-jest": "^28.1.3",
@@ -127,6 +128,9 @@
     "ts-jest": "^28.0.8",
     "ts-node": "^10.9.1",
     "typescript": "^4.4.4"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   },
   "jest": {
     "preset": "react-native",
@@ -154,5 +158,8 @@
       "@ctrl-k/schema": "<rootDir>/src/schema",
       "@ledgerhq/react-native-hw-transport-ble": "@ledgerhq/hw-transport-node-ble"
     }
+  },
+  "resolutions": {
+    "react": "18.0.0"
   }
 }

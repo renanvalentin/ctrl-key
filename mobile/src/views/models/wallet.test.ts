@@ -20,7 +20,7 @@ describe('wallet view model', () => {
 
     expect(summary).toEqual({
       name: 'w',
-      marketPrice: 'undefined USD',
+      marketPrice: '40.48 USD',
       balance: '11.54 ADA',
       txs: [
         {
@@ -98,7 +98,7 @@ describe('wallet view model', () => {
         id: expect.any(String),
         name: 'w',
         balance: '93.67 ADA',
-        marketPrice: '40.68',
+        marketPrice: '40.48',
         currency: 'USD',
       },
     ]);
