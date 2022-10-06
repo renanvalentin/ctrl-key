@@ -29,7 +29,7 @@ jobs:
         working-directory: mobile
         run: |
           npm ci --legacy-peer-deps
-          TZ=America/New_York npm test
+          npm run test:replay
 
   server:
     runs-on: ubuntu-latest
@@ -48,5 +48,4 @@ jobs:
         working-directory: server
         run: |
           npm ci
-          export POLLY_MODE=replay
-          TZ=America/New_York npm test
+          npm run test:replay
