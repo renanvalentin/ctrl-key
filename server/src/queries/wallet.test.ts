@@ -1,7 +1,7 @@
 /** @jest-environment setup-polly-jest/jest-environment-node */
 import { createServer } from '@graphql-yoga/node';
 import request from 'supertest';
-import { autoSetupPolly } from '../polly';
+import { autoSetupPolly, encryptRecord } from '../polly';
 import { schema } from '../schema';
 import { context } from '../context';
 
@@ -26,6 +26,8 @@ const query = `
 describe('query wallet', function () {
   let pollyContext = autoSetupPolly();
 
+  beforeEach(() => encryptRecord(pollyContext));
+
   it('responds with json', async function () {
     const response = await request(yoga).post('/graphql').send({
       query,
@@ -35,9 +37,30 @@ describe('query wallet', function () {
 
     expect(response.body.data).toEqual({
       wallet: {
-        balance: '98178932',
-        marketPrice: 0.461053,
+        balance: '93668173',
+        marketPrice: 0.434446,
         txs: [
+          {
+            type: 'Outgoing',
+            amount: '-2170253',
+            fees: '170253',
+            date: 1664933410,
+            id: '931ea55a0cd1eb719cb65d5e64b3aa4499b37054b182a88b9d02bd4b39465648',
+          },
+          {
+            type: 'Outgoing',
+            amount: '-1170253',
+            fees: '170253',
+            date: 1664739745,
+            id: '3e5f33d784f2ee6b58a4624df01f120f6816b2ba223c252250f4eec1a5152d1f',
+          },
+          {
+            type: 'Outgoing',
+            amount: '-1170253',
+            fees: '170253',
+            date: 1664738883,
+            id: '869d9b329f55f4757be0e51c83c7c3319ebb7c57f13011e5729d2bdccc23b2b7',
+          },
           {
             type: 'Outgoing',
             amount: '-2170253',
@@ -153,7 +176,5 @@ describe('query wallet', function () {
         ],
       },
     });
-
-    await pollyContext.polly.stop();
   });
 });

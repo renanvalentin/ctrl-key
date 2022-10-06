@@ -1,11 +1,14 @@
 import path from 'path';
-import { setupPolly } from 'setup-polly-jest';
+import { Context, setupPolly } from 'setup-polly-jest';
 import { Polly, PollyConfig } from '@pollyjs/core';
 import NodeHttpAdapter from '@pollyjs/adapter-node-http';
 import FSPersister from '@pollyjs/persister-fs';
+import { AES, enc } from 'crypto-js';
 
 Polly.register(NodeHttpAdapter);
 Polly.register(FSPersister);
+
+console.log('POLLY_TOKEN', process.env.POLLY_TOKEN);
 
 let recordIfMissing = true;
 let mode: PollyConfig['mode'] = 'replay';
@@ -29,7 +32,7 @@ export function autoSetupPolly() {
    *
    * TODO: Customize your config.
    */
-  return setupPolly({
+  const context = setupPolly({
     // 🟡 Note: In node, most `fetch` like libraries use the http/https modules.
     // `node-fetch` is handled by `NodeHttpAdapter`, NOT the `FetchAdapter`.
     adapters: [require('@pollyjs/adapter-node-http')],
@@ -49,5 +52,35 @@ export function autoSetupPolly() {
         port: false,
       },
     },
+  });
+
+  return context;
+}
+
+export function encryptRecord(context: Context) {
+  context.polly.server.any().on('beforePersist', (req, recording) => {
+    recording.request = AES.encrypt(
+      JSON.stringify(recording.request),
+      process.env.POLLY_TOKEN,
+    ).toString();
+
+    recording.response = AES.encrypt(
+      JSON.stringify(recording.response),
+      process.env.POLLY_TOKEN,
+    ).toString();
+  });
+
+  context.polly.server.any().on('beforeReplay', (req, recording) => {
+    recording.request = JSON.parse(
+      AES.decrypt(recording.request, process.env.POLLY_TOKEN).toString(
+        enc.Utf8,
+      ),
+    );
+
+    recording.response = JSON.parse(
+      AES.decrypt(recording.response, process.env.POLLY_TOKEN).toString(
+        enc.Utf8,
+      ),
+    );
   });
 }

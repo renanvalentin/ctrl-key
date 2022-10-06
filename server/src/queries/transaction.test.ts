@@ -1,7 +1,7 @@
 /** @jest-environment setup-polly-jest/jest-environment-node */
 import { createServer } from '@graphql-yoga/node';
 import request from 'supertest';
-import { autoSetupPolly } from '../polly';
+import { autoSetupPolly, encryptRecord } from '../polly';
 import { schema } from '../schema';
 import { CSL } from '../core';
 
@@ -31,6 +31,8 @@ const query = `
 
 describe('transaction queries', function () {
   let pollyContext = autoSetupPolly();
+
+  beforeEach(() => encryptRecord(pollyContext));
 
   it('responds with json', async function () {
     const response = await request(yoga).post('/graphql').send({
@@ -68,8 +70,7 @@ describe('transaction queries', function () {
       inputs: [
         {
           transaction_id: expect.toBeOneOf([
-            'cfdf7f8e998e66f425e7e1502e644ad1208d3da27132f68b59511e2b9db9ff70',
-            '5cc577d7b441558a547bafbc8bd04e99f132b1205ef40175eddb930a040e3e93',
+            '3e5f33d784f2ee6b58a4624df01f120f6816b2ba223c252250f4eec1a5152d1f',
           ]),
           index: expect.toBeOneOf([0, 1]),
         },
@@ -89,7 +90,7 @@ describe('transaction queries', function () {
           address:
             'addr_test1qp0kjlqhv0qj4922hmez460nrjqegzgcqs5g3wha66f3p08t8erv04n4weca43v4jhdrpqsc5f5mh2zx0pa4k04v34eqy4ns2d',
           amount: {
-            coin: expect.toBeOneOf(['85008679', '6829747']),
+            coin: expect.toBeOneOf(['5659494']),
             multiasset: new Map([
               [
                 '789ef8ae89617f34c07f7f6a12e4d65146f958c0bc15a97b4ff169f1',

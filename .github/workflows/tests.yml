@@ -10,6 +10,7 @@ env:
   MNEMONIC: ${{ secrets.MNEMONIC }}
   BLOCKFROST_API_TOKEN: ${{ secrets.BLOCKFROST_API_TOKEN }}
   POLLY_MODE: replay
+  POLLY_TOKEN: ${{ secrets.POLLY_TOKEN }}
   TZ: "America/New_York"
   SERVER_URL: http://localhost:4000/graphql
 

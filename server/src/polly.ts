@@ -1,8 +1,9 @@
 import path from 'path';
-import { setupPolly } from 'setup-polly-jest';
+import { Context, setupPolly } from 'setup-polly-jest';
 import { Polly, PollyConfig } from '@pollyjs/core';
 import NodeHttpAdapter from '@pollyjs/adapter-node-http';
 import FSPersister from '@pollyjs/persister-fs';
+import { AES, enc } from 'crypto-js';
 
 Polly.register(NodeHttpAdapter);
 Polly.register(FSPersister);
@@ -51,5 +52,33 @@ export function autoSetupPolly() {
         port: false,
       },
     },
+  });
+}
+
+export function encryptRecord(context: Context) {
+  context.polly.server.any().on('beforePersist', (req, recording) => {
+    recording.request = AES.encrypt(
+      JSON.stringify(recording.request),
+      process.env.POLLY_TOKEN,
+    ).toString();
+
+    recording.response = AES.encrypt(
+      JSON.stringify(recording.response),
+      process.env.POLLY_TOKEN,
+    ).toString();
+  });
+
+  context.polly.server.any().on('beforeReplay', (req, recording) => {
+    recording.request = JSON.parse(
+      AES.decrypt(recording.request, process.env.POLLY_TOKEN).toString(
+        enc.Utf8,
+      ),
+    );
+
+    recording.response = JSON.parse(
+      AES.decrypt(recording.response, process.env.POLLY_TOKEN).toString(
+        enc.Utf8,
+      ),
+    );
   });
 }

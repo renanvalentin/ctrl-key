@@ -4,7 +4,7 @@ import { HotWallet } from '@ctrlK/core';
 import fetch from 'cross-fetch';
 import { WalletViewModel } from './wallet';
 import * as fixtures from './wallet.fixture';
-import { autoSetupPolly } from '../../polly';
+import { autoSetupPolly, encryptRecord } from '../../polly';
 import { DescriptorEvent, Device, Observer } from '@ledgerhq/hw-transport';
 
 jest.mock('../../core/cardano-serialization-lib', () => ({
@@ -29,7 +29,9 @@ jest.mock('@ledgerhq/react-native-hw-transport-ble', () => ({
 }));
 
 describe('wallet view model', () => {
-  autoSetupPolly();
+  let context = autoSetupPolly();
+
+  beforeEach(() => encryptRecord(context));
 
   it('wallet summary', async () => {
     const name = 'w';
@@ -115,7 +117,7 @@ describe('wallet view model', () => {
         id: expect.any(String),
         name: 'w',
         balance: '93.67 ADA',
-        marketPrice: '40.48',
+        marketPrice: '40.27',
         currency: 'USD',
       },
     ]);

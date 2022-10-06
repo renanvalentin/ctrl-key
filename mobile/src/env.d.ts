@@ -5,6 +5,7 @@ declare global {
     interface ProcessEnv {
       MNEMONIC: string;
       BLOCKFROST_API_TOKEN: string;
+      POLLY_TOKEN: string;
     }
   }
 }
