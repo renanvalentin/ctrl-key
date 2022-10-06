@@ -5,10 +5,27 @@ import fetch from 'cross-fetch';
 import { WalletViewModel } from './wallet';
 import * as fixtures from './wallet.fixture';
 import { autoSetupPolly } from '../../polly';
+import { DescriptorEvent, Device, Observer } from '@ledgerhq/hw-transport';
 
 jest.mock('../../core/cardano-serialization-lib', () => ({
   __esModule: true,
   ...require('../../__tests__/cardano-serialization-lib'),
+}));
+
+jest.mock('@ledgerhq/react-native-hw-transport-ble', () => ({
+  __esModule: true,
+  default: {
+    listen: (observer: Observer<DescriptorEvent<Device>>) => {
+      observer.next({
+        type: 'add',
+        descriptor: jest.fn(),
+        device: jest.fn(),
+      });
+
+      observer.complete();
+    },
+    open: jest.fn(),
+  },
 }));
 
 describe('wallet view model', () => {
