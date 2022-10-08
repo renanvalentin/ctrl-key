@@ -1,0 +1,5 @@
+{
+  "outputDirectory": "dist",
+  "devCommand": "npm run vercel:dev",
+  "rewrites": [{ "source": "/(.*)", "destination": "/api/graphql" }]
+}
