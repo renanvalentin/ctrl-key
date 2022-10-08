@@ -5,7 +5,7 @@ import { autoSetupPolly, encryptRecord } from '../polly';
 import { schema } from '../schema';
 import { context } from '../context';
 
-const yoga = createServer({ schema, context });
+const yoga = createServer({ schema, context: context() });
 
 const query = `
 {  

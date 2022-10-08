@@ -1,5 +1,11 @@
-import { Resolvers, TxValue } from './resolvers-types';
+import {
+  Resolvers,
+  TxValue,
+  QuerySubmitTxArgs,
+  SubscriptionPendingTxsArgs,
+} from './resolvers-types';
 import { WalletQuery, TransactionQuery } from './queries';
+import { pubSub, PendingTxPayload } from './pub-sub';
 
 export const resolvers: Resolvers = {
   Query: {
@@ -21,8 +27,16 @@ export const resolvers: Resolvers = {
     ) {
       return TransactionQuery.buildTx(stakeAddress, value, paymentAddress);
     },
-    submitTx(_: unknown, { tx }: { tx: string }) {
-      return TransactionQuery.submitTx(tx);
+    submitTx(_: unknown, { tx }: QuerySubmitTxArgs, context) {
+      return TransactionQuery.submitTx(tx, context);
+    },
+  },
+  Subscription: {
+    pendingTxs: {
+      subscribe(_, { txHash }: SubscriptionPendingTxsArgs, context) {
+        return pubSub.subscribe('txs:pending:', txHash);
+      },
+      resolve: (payload: PendingTxPayload) => ({ hash: payload.hash }),
     },
   },
   Wallet: {

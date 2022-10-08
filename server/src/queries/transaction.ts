@@ -7,6 +7,7 @@ import {
   Block,
 } from '@ctrl-k/core';
 import debug from 'debug';
+import { Context } from '../context';
 import * as gql from '../resolvers-types';
 
 const logger = debug('queries:transaction');
@@ -88,18 +89,20 @@ export class TransactionQuery {
         },
       };
     } catch (err) {
-      console.log(err);
       logger('buildTx:err', err);
 
       throw err;
     }
   }
 
-  static async submitTx(tx: string): Promise<{ hash: string }> {
+  static async submitTx(
+    tx: string,
+    { pendingTxs }: Context,
+  ): Promise<{ hash: string }> {
     try {
-      // 84a40081825820e7e9e5d74f2c5a00828cd1f638ec0991ea198d30a55c6fccb81f8ea32b425f040101828258390092613032ecc6c1c2cf451e752b0a222dd8a70370db79bdf4721cc70826a4f8878feff4878c22176dc43a93ba8af53c9b75124dadcf419cfa1a001e8480825839005f697c1763c12a954abef22ae9f31c81940918042888bafdd69310bceb3e46c7d6757671dac59595da308218a269bba846787b5b3eac8d72821a05629e81a1581c789ef8ae89617f34c07f7f6a12e4d65146f958c0bc15a97b4ff169f1a1496861707079636f696e02021a0002990d031a04229435a10081825820bf6376ac22e13ac206b33cb768f86d2b53a21a001825f780a299b5b41173ad6f58404852585ca64dcfa8d536a75c4d1b3b53964247c1f00be58bc6cb6aad9ed921358cbbe3d2d9ba19fe8653256234117c0750c8cf03fdf5478d1a6e7f434b8a0d02f5f6
       logger('submitTx');
       const hash = await api.txSubmit(Buffer.from(tx, 'hex'));
+      pendingTxs.add(hash);
       logger('submitTx:response', hash);
       return {
         hash,
@@ -110,12 +113,3 @@ export class TransactionQuery {
     }
   }
 }
-
-/*
-stakeAddress + tx hash
-
-criar um canal entre o stakeAddress e configurar webhook para ver se aquela tx hash pertence ao stake address
-
-
-
-*/

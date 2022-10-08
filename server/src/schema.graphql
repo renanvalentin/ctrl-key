@@ -9,6 +9,10 @@ type Query {
   submitTx(tx: String!): TxResult!
 }
 
+type Subscription {
+  pendingTxs(txHash: String!): TxResult!
+}
+
 type Wallet {
   balance: String!
   marketPrice: Float!

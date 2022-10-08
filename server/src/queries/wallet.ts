@@ -2,7 +2,7 @@ import { uniqWith, eqProps } from 'ramda';
 import { AddressModel, TxDirections, Wallet, WalletModel } from '@ctrl-k/core';
 
 import * as gql from '../resolvers-types';
-import { Context } from 'src/context';
+import { Context } from '../context';
 
 const getTxs = async (addresses: AddressModel[]) => {
   const txs = await (

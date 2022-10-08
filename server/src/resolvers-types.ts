@@ -62,6 +62,16 @@ export type QueryWalletsArgs = {
   stakeAddresses: Array<Scalars['String']>;
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  pendingTxs: TxResult;
+};
+
+
+export type SubscriptionPendingTxsArgs = {
+  txHash: Scalars['String'];
+};
+
 export type Tx = {
   __typename?: 'Tx';
   amount: Scalars['String'];
@@ -189,6 +199,7 @@ export type ResolversTypes = {
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
+  Subscription: ResolverTypeWrapper<{}>;
   Tx: ResolverTypeWrapper<Tx>;
   TxBody: ResolverTypeWrapper<TxBody>;
   TxBodySummary: ResolverTypeWrapper<TxBodySummary>;
@@ -209,6 +220,7 @@ export type ResolversParentTypes = {
   Int: Scalars['Int'];
   Query: {};
   String: Scalars['String'];
+  Subscription: {};
   Tx: Tx;
   TxBody: TxBody;
   TxBodySummary: TxBodySummary;
@@ -234,6 +246,10 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   submitTx?: Resolver<ResolversTypes['TxResult'], ParentType, ContextType, RequireFields<QuerySubmitTxArgs, 'tx'>>;
   wallet?: Resolver<ResolversTypes['Wallet'], ParentType, ContextType, RequireFields<QueryWalletArgs, 'stakeAddress'>>;
   wallets?: Resolver<Array<ResolversTypes['Wallet']>, ParentType, ContextType, RequireFields<QueryWalletsArgs, 'stakeAddresses'>>;
+};
+
+export type SubscriptionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
+  pendingTxs?: SubscriptionResolver<ResolversTypes['TxResult'], "pendingTxs", ParentType, ContextType, RequireFields<SubscriptionPendingTxsArgs, 'txHash'>>;
 };
 
 export type TxResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Tx'] = ResolversParentTypes['Tx']> = {
@@ -280,6 +296,7 @@ export type Resolvers<ContextType = Context> = {
   Amount?: AmountResolvers<ContextType>;
   Asset?: AssetResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Subscription?: SubscriptionResolvers<ContextType>;
   Tx?: TxResolvers<ContextType>;
   TxBody?: TxBodyResolvers<ContextType>;
   TxBodySummary?: TxBodySummaryResolvers<ContextType>;
