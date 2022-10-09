@@ -9,10 +9,15 @@ on:
 env:
   MNEMONIC: ${{ secrets.MNEMONIC }}
   BLOCKFROST_API_TOKEN: ${{ secrets.BLOCKFROST_API_TOKEN }}
+  BLOCKFROST_WEBHOOK_AUTH_TOKEN: ${{ secrets.BLOCKFROST_WEBHOOK_AUTH_TOKEN }}
   POLLY_MODE: replay
   POLLY_TOKEN: ${{ secrets.POLLY_TOKEN }}
   TZ: "America/New_York"
   SERVER_URL: http://localhost:4000/graphql
+  PUSHER_APP_ID: ${{ secrets.PUSHER_APP_ID }}
+  PUSHER_KEY: ${{ secrets.PUSHER_KEY }}
+  PUSHER_SECRET: ${{ secrets.PUSHER_SECRET }}
+  PUSHER_CLUSTER: ${{ secrets.PUSHER_CLUSTER }}
 
 jobs:
   mobile:

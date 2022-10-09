@@ -18,5 +18,5 @@ export async function createServer() {
     pubSub.publish('txs:pending:', tx, { hash: tx });
   });
 
-  return yogaServer({ schema, context: context(pendingTxs), port: 4000 });
+  return yogaServer({ schema, context: context(pendingTxs) });
 }

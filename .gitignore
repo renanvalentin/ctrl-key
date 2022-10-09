@@ -69,3 +69,4 @@ mobile/ios/Pods/
 # Env
 .env
 !.env.example
+.vercel
