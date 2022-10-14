@@ -34,6 +34,7 @@ export const Main = () => {
   );
 
   const activeWallet = Pages.Main.useActiveWallet();
+
   const { data: txs, error: txsError } = useSWR(
     activeWallet !== undefined ? ['txs', wallets[activeWallet]] : null,
     (_, w) => viewModel.txs(w),

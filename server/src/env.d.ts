@@ -11,6 +11,7 @@ declare global {
       PUSHER_KEY: string;
       PUSHER_SECRET: string;
       PUSHER_CLUSTER: string;
+      LOGTAIL_SOURCE_TOKEN: string;
     }
   }
 }

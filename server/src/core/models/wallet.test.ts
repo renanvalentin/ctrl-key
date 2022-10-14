@@ -165,9 +165,5 @@ describe('wallet', () => {
     );
 
     await pollyContext.polly.stop();
-
-    // const utxo = await Promise.all(txs.map(tx => tx.utxo()));
-
-    // console.log(JSON.stringify(utxo, null, 2));
   }, 30_000_000);
 });

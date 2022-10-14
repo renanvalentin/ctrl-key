@@ -4,16 +4,15 @@ dotenv.config();
 import express from 'express';
 import { verifyWebhookSignature } from '@blockfrost/blockfrost-js';
 import Pusher from 'pusher';
-import debug from 'debug';
 
-const logger = debug('webhook');
+import { logger } from './logger';
 
 export const createWebhook = () => {
   const pusher = new Pusher({
-    appId: process.env.PUSHER_APP_ID,
-    key: process.env.PUSHER_KEY,
-    secret: process.env.PUSHER_SECRET,
-    cluster: process.env.PUSHER_CLUSTER,
+    appId: process.env.PUSHER_APP_ID as string,
+    key: process.env.PUSHER_KEY as string,
+    secret: process.env.PUSHER_SECRET as string,
+    cluster: process.env.PUSHER_CLUSTER as string,
     useTLS: true,
   });
 
@@ -30,7 +29,7 @@ export const createWebhook = () => {
         request.get('blockfrost-signature');
 
       if (!signatureHeader) {
-        logger('The request is missing Blockfrost-Signature header');
+        logger.error('The request is missing Blockfrost-Signature header');
         return response.status(400).send(`Missing signature header`);
       }
 
@@ -49,10 +48,10 @@ export const createWebhook = () => {
 
       switch (type) {
         case 'transaction':
-          logger(`received transactions %s`, payload.length);
+          logger.info(`received transactions %s`, payload.length);
           for (const transaction of payload) {
-            pusher.trigger('cardano', 'transaction', transaction.tx);
-            logger(`tx %s`, transaction.tx.hash);
+            pusher.trigger('cardano', 'transaction', { tx: transaction.tx });
+            logger.info(`tx %s`, transaction.tx.hash);
           }
           break;
         default:

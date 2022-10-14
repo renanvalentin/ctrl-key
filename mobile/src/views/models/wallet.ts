@@ -95,6 +95,8 @@ export class WalletViewModel {
       },
     });
 
+    const txIds = new Set(wallet.txs.map(tx => tx.id));
+
     const confirmedTxs: Types.Main.Tx[] = wallet.txs.map(tx => ({
       type: tx.type === TxDirection.Incoming ? 'received' : 'withdrawal',
       amount: toADA(tx.amount),
@@ -103,13 +105,15 @@ export class WalletViewModel {
       date: format(fromUnixTime(tx.date), 'yyyy/MM/dd hh:mm:ss a'),
     }));
 
-    const pendingTxs: Types.Main.Tx[] = data.pendingTxs.map(tx => ({
-      type: 'pending',
-      amount: toADA(tx.lovelace),
-      fees: tx.fees ? toADA(tx.fees) : undefined,
-      id: tx.id,
-      date: format(fromUnixTime(tx.date), 'yyyy/MM/dd hh:mm:ss a'),
-    }));
+    const pendingTxs: Types.Main.Tx[] = data.pendingTxs
+      .filter(tx => !txIds.has(tx.id))
+      .map(tx => ({
+        type: 'pending',
+        amount: toADA(tx.lovelace),
+        fees: tx.fees ? toADA(tx.fees) : undefined,
+        id: tx.id,
+        date: format(fromUnixTime(tx.date), 'yyyy/MM/dd hh:mm:ss a'),
+      }));
 
     return [...pendingTxs, ...confirmedTxs];
   }

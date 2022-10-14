@@ -64,7 +64,7 @@ export const Processing = () => {
     };
 
     doSign();
-  }, [wallet]);
+  }, []);
 
   const onClosePress = () => navigation.navigate('Main');
 

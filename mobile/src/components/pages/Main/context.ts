@@ -52,6 +52,10 @@ export const useRefreshTxs = (txs: Tx[] = [], loading = false) => {
 export const useActiveWallet = (): number | undefined => {
   const [state] = hook();
 
+  if (state.activeWallet === undefined && state.wallets.length > 0) {
+    return 0;
+  }
+
   return state.activeWallet;
 };
 

@@ -92,6 +92,7 @@
     "@emurgo/cardano-serialization-lib-nodejs": "^11.0.5",
     "@graphql-tools/schema": "^9.0.4",
     "@graphql-yoga/node": "^2.13.13",
+    "@logtail/node": "^0.1.12",
     "@vendia/serverless-express": "^4.10.1",
     "axios": "^0.27.2",
     "dataloader": "^2.1.0",

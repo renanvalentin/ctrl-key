@@ -17,7 +17,7 @@ export class TransactionBulder {
     const txBuilder = CSL.TransactionBuilder.new(config);
 
     txBuilder.add_output(output);
-    txBuilder.add_inputs_from(inputs, 1);
+    txBuilder.add_inputs_from(inputs, 0);
     txBuilder.set_ttl(ttl);
     txBuilder.add_change_if_needed(changeAddress);
 
