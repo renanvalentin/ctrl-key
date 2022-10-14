@@ -25,7 +25,7 @@ export const TransactionsChannel = () => {
       await pusher.subscribe({
         channelName: 'cardano',
         onEvent: (event: PusherEvent) => {
-          txs$.next(event.data);
+          txs$.next(event.data.hash);
         },
       });
     };

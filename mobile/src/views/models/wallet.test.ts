@@ -191,14 +191,7 @@ describe('wallet view model', () => {
       },
     );
 
-    client.query({
-      query: SUBSCRIPTION_PENDING_TX,
-      variables: {
-        txHash,
-      },
-    });
-
-    expect({}).toEqual([
+    expect(txHash).toEqual([
       {
         id: expect.any(String),
         name: 'w',
@@ -207,5 +200,5 @@ describe('wallet view model', () => {
         currency: 'USD',
       },
     ]);
-  });
+  }, 10_000_000);
 });

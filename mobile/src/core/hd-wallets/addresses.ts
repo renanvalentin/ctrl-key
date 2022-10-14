@@ -121,7 +121,7 @@ export const deriveAddresses = async (
 
 export const discoverAddresses = async (
   accountPrivateKey: CSL.Bip32PrivateKey,
-  size = 20,
+  size = 40,
   accountType: AccountType = AccountType.Receive,
   inputAddresses: string[],
 ): Promise<DiscoverAddress[]> => {
@@ -139,9 +139,9 @@ export const discoverAddresses = async (
       accountType,
     );
 
-    discover = addresses.every(addr => lookup.has(addr.address));
+    discover = addresses.some(addr => lookup.has(addr.address));
     if (discover) {
-      startGap += 20;
+      startGap += size;
     }
 
     discoveredAddresses = [
@@ -159,14 +159,14 @@ export const discoverSigningAddresses = async (
 ): Promise<CSL.Bip32PrivateKey[]> => {
   const discoveredExternalAddr = await discoverAddresses(
     accountPrivateKey,
-    20,
+    40, // FIXME: Find a better way to locate address
     AccountType.Receive,
     inputAddresses,
   );
 
   const discoveredInternalAddr = await discoverAddresses(
     accountPrivateKey,
-    20,
+    40,
     AccountType.Internal,
     inputAddresses,
   );
