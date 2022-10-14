@@ -2,21 +2,21 @@ import React, { Fragment } from 'react';
 import { View } from 'react-native';
 import {
   Button,
-  Icon,
   StyleService,
   Text,
   useStyleSheet,
 } from '@ui-kitten/components';
 import { spacing } from '../../spacing';
+import { Icon } from '../../ui';
 
 interface Props {
   onRestoreWalletPress: () => void;
   onLedgerNanoXPress: () => void;
 }
 
-const ImportIcon = (props: any) => (
-  <Icon {...props} name="cloud-upload-outline" />
-);
+const ImportIcon = (props: any) => {
+  return <Icon {...props} name="cloud-upload-outline" />;
+};
 
 const NanoXIcon = (props: any) => <Icon {...props} name="hard-drive-outline" />;
 

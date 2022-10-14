@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client';
 import * as eva from '@eva-design/eva';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
@@ -9,8 +9,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import StorybookUIRoot from '../.ondevice/Storybook';
 
-import { SERVER_URL } from './config';
 import { Pages } from './components';
+import { TransactionsChannel } from './channels';
 import {
   Main,
   Summary,
@@ -27,12 +27,10 @@ import {
   NanoXPassword,
 } from './views';
 import { SWR } from './swr-config';
+import { createApolloClient } from './apollo';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const client = new ApolloClient({
-  uri: SERVER_URL,
-  cache: new InMemoryCache(),
-});
+const client = createApolloClient(fetch);
 
 const Stack = createNativeStackNavigator();
 
@@ -42,6 +40,7 @@ export const App = () => {
   return (
     <SWR>
       <SafeAreaProvider>
+        <TransactionsChannel />
         <Pages.Main.ActionProvider>
           <Pages.Main.StateProvider>
             <ApplicationProvider {...eva} theme={eva.light}>

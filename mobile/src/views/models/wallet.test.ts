@@ -6,6 +6,8 @@ import { WalletViewModel } from './wallet';
 import * as fixtures from './wallet.fixture';
 import { autoSetupPolly, encryptRecord } from '../../polly';
 import { DescriptorEvent, Device, Observer } from '@ledgerhq/hw-transport';
+import { createApolloClient } from '../../apollo';
+import { SUBSCRIPTION_PENDING_TX } from './queries';
 
 jest.mock('../../core/cardano-serialization-lib', () => ({
   __esModule: true,
@@ -89,10 +91,7 @@ describe('wallet view model', () => {
   });
 
   it('generates wallets carousel', async () => {
-    const client = new ApolloClient({
-      link: new HttpLink({ uri: process.env.SERVER_URL, fetch }),
-      cache: new InMemoryCache(),
-    });
+    const client = createApolloClient(fetch);
 
     const password = 'pass';
 
@@ -118,6 +117,93 @@ describe('wallet view model', () => {
         name: 'w',
         balance: '93.67 ADA',
         marketPrice: '40.27',
+        currency: 'USD',
+      },
+    ]);
+  });
+
+  it('generates wallets carousel', async () => {
+    const client = createApolloClient(fetch);
+
+    const password = 'pass';
+
+    const seedWords = process.env.MNEMONIC;
+
+    const name = 'w';
+
+    const wallet = await HotWallet.create({
+      name,
+      seedWords,
+      password,
+    });
+
+    const wallets: HotWallet[] = [wallet];
+
+    const viewModel = new WalletViewModel(client);
+
+    const carousel = await viewModel.walletsCarousel(wallets);
+
+    expect(carousel).toEqual([
+      {
+        id: expect.any(String),
+        name: 'w',
+        balance: '93.67 ADA',
+        marketPrice: '40.27',
+        currency: 'USD',
+      },
+    ]);
+  });
+
+  it.skip('subscribe to pending txs', async () => {
+    const client = createApolloClient(fetch);
+
+    const password = 'pass';
+
+    const seedWords = process.env.MNEMONIC;
+
+    const name = 'w';
+
+    const wallet = await HotWallet.create({
+      name,
+      seedWords,
+      password,
+    });
+
+    const viewModel = new WalletViewModel(client);
+
+    const { hex, summary, witnessesAddress } = await viewModel.buildTx(wallet, {
+      lovelace: '2000000',
+      paymentAddress:
+        'addr_test1qra2njhhucffhtfwq3zyvz3h9huqd87d83zay44h2a6nj0lt8erv04n4weca43v4jhdrpqsc5f5mh2zx0pa4k04v34eq32w05z',
+    });
+
+    const txHash = await viewModel.signTx(
+      wallet,
+      {
+        hex,
+        password,
+        witnessesAddress,
+      },
+      {
+        hex,
+        summary,
+        witnessesAddress,
+      },
+    );
+
+    client.query({
+      query: SUBSCRIPTION_PENDING_TX,
+      variables: {
+        txHash,
+      },
+    });
+
+    expect({}).toEqual([
+      {
+        id: expect.any(String),
+        name: 'w',
+        balance: '93.67 ADA',
+        marketPrice: undefined,
         currency: 'USD',
       },
     ]);

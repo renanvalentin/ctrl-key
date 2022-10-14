@@ -8,6 +8,7 @@ import { Pages } from '../../components';
 import { useStyleSheet } from '@ui-kitten/components';
 import { WalletViewModel } from '../models';
 import { useApolloClient } from '@apollo/client';
+import { last } from 'ramda';
 
 type Navigation = NativeStackScreenProps<
   RootStackParamList,
@@ -24,7 +25,7 @@ export const Processing = () => {
   const styles = useStyleSheet(themedStyle);
   const navigation = useNavigation<Navigation>();
   const {
-    params: { walletId, unsingedTx },
+    params: { walletId, unsingedTx, txBody },
   } = useRoute<Route>();
 
   const apolloClient = useApolloClient();
@@ -40,19 +41,30 @@ export const Processing = () => {
   );
 
   const wallet = useAppStore(state => state.getWalletById(walletId));
+  const updateWallet = useAppStore(state => state.updateWallet);
 
   useEffect(() => {
+    if (!wallet) {
+      return;
+    }
+
     const doSign = async () => {
-      const txHash = await viewModel.signTx(wallet, { ...unsingedTx });
+      const nextWallet = await viewModel.signTx(
+        wallet,
+        { ...unsingedTx },
+        txBody,
+      );
 
       setState({
         completed: true,
-        txHash,
+        txHash: last(nextWallet.pendingTxs)?.id as string,
       });
+
+      updateWallet(nextWallet);
     };
 
     doSign();
-  }, []);
+  }, [wallet]);
 
   const onClosePress = () => navigation.navigate('Main');
 

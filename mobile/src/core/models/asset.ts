@@ -28,11 +28,8 @@ export class Asset implements AssetModel {
 
     const assetNames = await AssetName.fromAssetNames(cslAssetNames);
 
-    console.log({ assetNames });
-
     const mapResult = Array.from({ length: len }).map(async (_, idx) => {
       const assetName: AssetName = assetNames[idx];
-      console.log('assets', assets);
       const value = await assets.get(
         await CSL.AssetName.from_bytes(assetName.value),
       );

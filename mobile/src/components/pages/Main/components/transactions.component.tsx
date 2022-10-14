@@ -2,7 +2,6 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import {
   Divider,
-  Icon,
   List,
   ListItem,
   useStyleSheet,
@@ -13,6 +12,7 @@ import {
 import * as Data from '../data';
 import { useStateContext } from '../context';
 import { spacing } from '../../../spacing';
+import { Icon } from '../../../ui';
 
 export const Transactions = () => {
   const styles = useStyleSheet(themedStyle);

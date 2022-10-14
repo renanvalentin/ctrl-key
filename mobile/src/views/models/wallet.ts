@@ -4,6 +4,8 @@ import {
   WalletModel,
   LedgerConnector,
   Descriptor,
+  LedgerWallet,
+  PendingTx,
 } from '@ctrlK/core';
 import { format, fromUnixTime } from 'date-fns';
 import {
@@ -81,7 +83,6 @@ export class WalletViewModel {
   }
 
   async txs(data: WalletModel): Promise<Types.Main.Tx[]> {
-    console.log(data.id);
     const {
       data: { wallet },
     } = await this.apolloClient.query<
@@ -94,13 +95,23 @@ export class WalletViewModel {
       },
     });
 
-    return wallet.txs.map(tx => ({
+    const confirmedTxs: Types.Main.Tx[] = wallet.txs.map(tx => ({
       type: tx.type === TxDirection.Incoming ? 'received' : 'withdrawal',
       amount: toADA(tx.amount),
       fees: tx.fees ? toADA(tx.fees) : undefined,
       id: tx.id,
       date: format(fromUnixTime(tx.date), 'yyyy/MM/dd hh:mm:ss a'),
     }));
+
+    const pendingTxs: Types.Main.Tx[] = data.pendingTxs.map(tx => ({
+      type: 'pending',
+      amount: toADA(tx.lovelace),
+      fees: tx.fees ? toADA(tx.fees) : undefined,
+      id: tx.id,
+      date: format(fromUnixTime(tx.date), 'yyyy/MM/dd hh:mm:ss a'),
+    }));
+
+    return [...pendingTxs, ...confirmedTxs];
   }
 
   async buildTx(
@@ -129,7 +140,8 @@ export class WalletViewModel {
   async signTx(
     wallet: WalletModel,
     { hex, password, witnessesAddress }: UnsignedTx,
-  ): Promise<string> {
+    txBody: TxBody,
+  ): Promise<WalletModel> {
     const signedTx = await wallet.signTx(hex, password, witnessesAddress);
 
     const txBytes = await signedTx.to_bytes();
@@ -148,7 +160,27 @@ export class WalletViewModel {
       },
     });
 
-    return hash;
+    const pendingTxs = [
+      ...wallet.pendingTxs,
+      new PendingTx({
+        date: Date.now(),
+        fees: txBody.summary.fees,
+        id: hash,
+        lovelace: txBody.summary.paymentAddresses[0].amount.lovelace,
+      }),
+    ];
+
+    if (wallet instanceof HotWallet) {
+      return new HotWallet({
+        ...wallet,
+        pendingTxs,
+      });
+    }
+
+    return new LedgerWallet({
+      ...wallet,
+      pendingTxs,
+    });
   }
 
   static async tryUnlockPrivateKey(

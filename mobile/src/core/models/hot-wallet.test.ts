@@ -7,7 +7,7 @@ jest.mock('../cardano-serialization-lib', () => ({
 }));
 
 it('serialize wallet', async () => {
-  const password = 'pass';
+  const password = '1111';
 
   const seedWords = process.env.MNEMONIC;
 
@@ -24,6 +24,9 @@ it('serialize wallet', async () => {
     id: expect.any(String),
     name: 'w',
     encryptedRootKey: expect.any(String),
+    pendingTxs: [],
+    stakeAddress:
+      'stake_test1ur4nu3k86e6hvuw6ck2etk3ssgv2y6dm4pr8s76m86kg6usappr74',
     paymentVerificationKey:
       'xpub1ha3hdtpzuyavyp4n8jmk37rd9df6yxsqrqjl0q9znx6mgytn44hugkegc76zfx5wwuk060x67dlft5vfndzdzgrh824w3tlu9m4pznccqd6xs',
     stakeVerificationKey:

@@ -29,9 +29,6 @@ export const createWebhook = () => {
         request.headers['blockfrost-signature'] ||
         request.get('blockfrost-signature');
 
-      console.log('signatureHeader', signatureHeader);
-      console.log('headers', request.headers);
-
       if (!signatureHeader) {
         logger('The request is missing Blockfrost-Signature header');
         return response.status(400).send(`Missing signature header`);
@@ -44,15 +41,11 @@ export const createWebhook = () => {
           SECRET_AUTH_TOKEN,
         );
       } catch (error) {
-        console.log('error');
-        console.log(error);
         return response.status(400).send('Signature is not valid!');
       }
 
       const type = request.body.type;
       const payload = request.body.payload;
-
-      console.log(payload);
 
       switch (type) {
         case 'transaction':

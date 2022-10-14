@@ -2,13 +2,13 @@ import React, { Fragment, useState } from 'react';
 import { View } from 'react-native';
 import {
   Button,
-  Icon,
   StyleService,
   Text,
   useStyleSheet,
 } from '@ui-kitten/components';
 import QRCode from 'react-native-qrcode-svg';
 import Clipboard from '@react-native-community/clipboard';
+import { Icon } from '../../ui';
 
 import { spacing } from '../../spacing';
 

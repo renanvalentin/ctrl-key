@@ -58,6 +58,16 @@ export type QueryWalletsArgs = {
   stakeAddresses: Array<Scalars['String']>;
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  pendingTxs: TxResult;
+};
+
+
+export type SubscriptionPendingTxsArgs = {
+  txHash: Scalars['String'];
+};
+
 export type Tx = {
   __typename?: 'Tx';
   amount: Scalars['String'];

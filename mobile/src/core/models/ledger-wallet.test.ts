@@ -28,6 +28,7 @@ it('serialize wallet', async () => {
     id: expect.any(String),
     name: 'w',
     encryptedRootKey: expect.any(String),
+    pendingTxs: [],
     paymentVerificationKey:
       'xpub1qgxrzpz8zqy2t06g9a8xttv67gvhtsh2h4tzee6yegamf0ql4krju25yznlrfa6zrh8n3649r4q0w95slsz4nh8um50gwf58r3zke6cwhyrkl',
     stakeVerificationKey:

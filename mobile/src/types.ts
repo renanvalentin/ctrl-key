@@ -14,6 +14,6 @@ export type RootStackParamList = {
   SendAmount: { walletId: string };
   SendSummary: { walletId: string; txBody: TxBody };
   SendPassword: { walletId: string; txBody: TxBody };
-  Processing: { walletId: string; unsingedTx: UnsignedTx };
+  Processing: { walletId: string; unsingedTx: UnsignedTx; txBody: TxBody };
   Receive: { walletId: string };
 };

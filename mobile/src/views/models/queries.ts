@@ -56,3 +56,11 @@ export const GET_SUBMIT_TX = gql`
     }
   }
 `;
+
+export const SUBSCRIPTION_PENDING_TX = gql`
+  subscription PendingTxs($tx: String!) {
+    pendingTxs(txHash: $tx) {
+      hash
+    }
+  }
+`;

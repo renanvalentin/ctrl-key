@@ -3,6 +3,7 @@ import { CSL } from '../cardano-serialization-lib';
 import * as hdWallets from '../hd-wallets';
 import * as crypto from '../crypto';
 import { Bech32, SerializedWallet, WalletModel } from './wallet';
+import { PendingTx, PendingTxModel } from './pending-tx';
 
 export interface CreateLedgerWalletArgs {
   name: string;
@@ -19,6 +20,7 @@ interface WalletDeps {
   stakeVerificationKey: Bech32;
   paymentAddresses: Bech32[];
   stakeAddress: Bech32;
+  pendingTxs: PendingTxModel[];
 }
 
 export class LedgerWallet implements WalletModel {
@@ -29,6 +31,7 @@ export class LedgerWallet implements WalletModel {
   readonly stakeVerificationKey: Bech32;
   readonly paymentAddresses: string[];
   readonly stakeAddress: string;
+  readonly pendingTxs: PendingTxModel[];
 
   constructor({
     id,
@@ -38,6 +41,7 @@ export class LedgerWallet implements WalletModel {
     stakeVerificationKey,
     paymentAddresses,
     stakeAddress,
+    pendingTxs,
   }: WalletDeps) {
     this.id = id;
     this.name = name;
@@ -46,6 +50,7 @@ export class LedgerWallet implements WalletModel {
     this.stakeVerificationKey = stakeVerificationKey;
     this.paymentAddresses = paymentAddresses;
     this.stakeAddress = stakeAddress;
+    this.pendingTxs = pendingTxs;
   }
 
   async tryUnlockPrivateKey(password: string): Promise<boolean> {
@@ -104,6 +109,7 @@ export class LedgerWallet implements WalletModel {
       stakeVerificationKey: await stakeVerificationKey.to_bech32(),
       paymentAddresses: [paymentAddress],
       stakeAddress,
+      pendingTxs: [],
     });
   }
 
@@ -115,6 +121,7 @@ export class LedgerWallet implements WalletModel {
       encryptedRootKey: this.encryptedRootKey,
       paymentVerificationKey: this.paymentVerificationKey,
       stakeVerificationKey: this.stakeVerificationKey,
+      pendingTxs: this.pendingTxs.map(p => p.serialize()),
     };
   }
 
@@ -146,6 +153,9 @@ export class LedgerWallet implements WalletModel {
       stakeVerificationKey: serializedWallet.stakeVerificationKey,
       paymentAddresses: [paymentAddress],
       stakeAddress,
+      pendingTxs: serializedWallet.pendingTxs.map(p =>
+        PendingTx.deserialize(p),
+      ),
     });
   }
 

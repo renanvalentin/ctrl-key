@@ -1,9 +1,10 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Icon, useStyleSheet, Button } from '@ui-kitten/components';
+import { useStyleSheet, Button } from '@ui-kitten/components';
 import { useStateContext } from '../context';
 import { spacing } from '../../../spacing';
 import { useActions } from '../actions';
+import { Icon } from '../../../ui';
 
 const renderReceiveIcon = (props: any) => (
   <Icon {...props} name="diagonal-arrow-right-down-outline" col />

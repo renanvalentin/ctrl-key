@@ -1,4 +1,5 @@
 import { CSL } from '../cardano-serialization-lib';
+import { PendingTxModel, Props as SerializedPendingTx } from './pending-tx';
 
 export interface SerializedWallet {
   __type: 'hot' | 'cold';
@@ -7,6 +8,8 @@ export interface SerializedWallet {
   encryptedRootKey: string;
   paymentVerificationKey: string;
   stakeVerificationKey: string;
+  stakeAddress: string;
+  pendingTxs: SerializedPendingTx[];
 }
 
 export type Bech32 = string;
@@ -19,6 +22,7 @@ export interface WalletModel {
   readonly stakeVerificationKey: Bech32;
   readonly stakeAddress: Bech32;
   readonly paymentAddresses: Bech32[];
+  readonly pendingTxs: PendingTxModel[];
   tryUnlockPrivateKey(password: string): Promise<boolean>;
   serialize(): Promise<SerializedWallet>;
   signTx(

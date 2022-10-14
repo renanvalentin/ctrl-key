@@ -41,6 +41,7 @@ export const SendPassword = () => {
         password: pin,
         witnessesAddress: txBody.witnessesAddress,
       },
+      txBody,
     });
   };
 
