@@ -23,13 +23,15 @@ export const createWebhook = () => {
   app.post(
     '/api/webhook',
     express.json({ type: 'application/json' }),
-    (request, response) => {
+    async (request, response) => {
       const signatureHeader =
         request.headers['blockfrost-signature'] ||
         request.get('blockfrost-signature');
 
       if (!signatureHeader) {
-        logger.error('The request is missing Blockfrost-Signature header');
+        await logger.error(
+          'The request is missing Blockfrost-Signature header',
+        );
         return response.status(400).send(`Missing signature header`);
       }
 
@@ -48,10 +50,12 @@ export const createWebhook = () => {
 
       switch (type) {
         case 'transaction':
-          logger.info(`received transactions %s`, payload.length);
+          await logger.info(`received transactions %s`, payload.length);
           for (const transaction of payload) {
-            pusher.trigger('cardano', 'transaction', { tx: transaction.tx });
-            logger.info(`tx %s`, transaction.tx.hash);
+            await pusher.trigger('cardano', 'transaction', {
+              tx: transaction.tx,
+            });
+            await logger.info(`tx %s`, transaction.tx.hash);
           }
           break;
         default:
