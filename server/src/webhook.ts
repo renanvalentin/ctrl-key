@@ -50,12 +50,14 @@ export const createWebhook = () => {
 
       switch (type) {
         case 'transaction':
-          await logger.info(`received transactions %s`, payload.length);
+          await logger.info(`received transactions`, { count: payload.length });
           for (const transaction of payload) {
             await pusher.trigger('cardano', 'transaction', {
               tx: transaction.tx,
             });
-            await logger.info(`tx %s`, transaction.tx.hash);
+            await logger.info(`tx`, {
+              tx: transaction.tx,
+            });
           }
           break;
         default:
